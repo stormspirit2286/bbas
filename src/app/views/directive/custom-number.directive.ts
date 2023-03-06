@@ -19,9 +19,9 @@ export class FourDigitNumberDirective {
 
   onInput(value: string) {
     setTimeout(() => {
-      const num = parseInt(value, 10);
+      const num = parseInt(value ? value : '0', 10);
       const formattedNum = num.toString().padStart(4, '0');
       this.el.nativeElement.value = formattedNum;
-    }, 300);
+    }, 500);
   }
 }

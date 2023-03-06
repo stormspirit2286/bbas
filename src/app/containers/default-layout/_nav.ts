@@ -31,6 +31,12 @@ export const navItems: INavData[] = [
     linkProps: { fragment: 'someAnchor' },
     iconComponent: { name: 'cil-star' },
   },
+  {
+    name: 'Thông tin công ty',
+    url: '/info-company',
+    linkProps: { fragment: 'someAnchor' },
+    iconComponent: { name: 'cil-star' },
+  },
   //   {
   //     name: 'Components',
   //     title: true,
@@ -205,10 +211,10 @@ export const navItems: INavData[] = [
   //         name: 'Modal',
   //         url: '/notifications/modal',
   //       },
-  //       {
-  //         name: 'Toast',
-  //         url: '/notifications/toasts',
-  //       },
+  // {
+  //   name: 'Toast',
+  //   url: '/notifications/toasts',
+  // },
   //     ],
   //   },
   //   {

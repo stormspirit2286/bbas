@@ -1,6 +1,79 @@
 <div class="fade-in">
   <c-card class="mb-4">
-    <c-card-header> Yêu Cầu Sản Xuất </c-card-header>
-    <c-card-body> </c-card-body>
+    <c-card-header> Tạo Phiếu Yêu Cầu Sản Xuất </c-card-header>
+    <c-card-body>
+      <form [formGroup]="createProductForm" class="row g-3">
+        <c-row class="mt-4">
+          <label cLabel="col" class="col-sm-2" for="maKhachHang">
+            Chọn khách hàng
+          </label>
+          <c-col [sm]="10">
+            <select cSelect formControlName="maCty">
+              <option value="" disabled selected>
+                Chọn 1 trong các khách hàng sau
+              </option>
+              <option
+                *ngFor="let item of List_Customers"
+                [ngValue]="item.value"
+              >
+                {{ item.name }}
+              </option>
+            </select>
+          </c-col>
+        </c-row>
+        <c-row class="mt-4">
+          <label cLabel="col" class="col-sm-2" for="ngayYeuCau">
+            Chọn ngày yêu cầu
+          </label>
+          <c-col [sm]="10">
+            <c-col lg="5">
+              <input
+                cFormControl
+                id="ngayYeuCau"
+                formControlName="ngayYeuCau"
+                type="date"
+              />
+            </c-col>
+          </c-col>
+        </c-row>
+        <c-row class="mt-4">
+          <label cLabel="col" class="col-sm-2" for="maNganh">
+            Số đơn hàng
+          </label>
+          <c-col [sm]="10">
+            <input
+              cFormControl
+              formControlName="soDonHang"
+              placeholder="Nhập số đơn hàng ..."
+              type="text"
+            />
+          </c-col>
+        </c-row>
+
+        <c-col
+          [xs]="12"
+          class="text-center d-flex justify-content-center gap-2"
+        >
+          <button
+            cButton
+            type="submit"
+            color="success"
+            (click)="exportExcel()"
+            shape="rounded-pill"
+            [disabled]="createProductForm.invalid"
+          >
+            Download file
+          </button>
+          <button
+            cButton
+            color="secondary"
+            shape="rounded-pill"
+            (click)="resetForm()"
+          >
+            Làm mới
+          </button>
+        </c-col>
+      </form>
+    </c-card-body>
   </c-card>
 </div>

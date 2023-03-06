@@ -53,6 +53,7 @@ import { IconModule, IconSetService } from '@coreui/icons-angular';
 import { CodeProductComponent } from './views/code-product/code-product.component';
 import { RequestProductionComponent } from './views/request-production/request-production.component';
 import { ConfirmOrderComponent } from './views/confirm-order/confirm-order.component';
+import { InfomationCompanyComponent } from './views/infomation-company/infomation-company.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -72,6 +73,7 @@ const APP_CONTAINERS = [
     RequestProductionComponent,
     ConfirmOrderComponent,
     FourDigitNumberDirective,
+    InfomationCompanyComponent,
   ],
   imports: [
     BrowserModule,

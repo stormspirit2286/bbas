@@ -9,6 +9,7 @@ import { RegisterComponent } from './views/pages/register/register.component';
 import { CodeProductComponent } from './views/code-product/code-product.component';
 import { RequestProductionComponent } from './views/request-production/request-production.component';
 import { ConfirmOrderComponent } from './views/confirm-order/confirm-order.component';
+import { InfomationCompanyComponent } from './views/infomation-company/infomation-company.component';
 
 const routes: Routes = [
   {
@@ -88,6 +89,10 @@ const routes: Routes = [
       {
         path: 'confirm-order',
         component: ConfirmOrderComponent,
+      },
+      {
+        path: 'info-company',
+        component: InfomationCompanyComponent,
       },
     ],
   },
