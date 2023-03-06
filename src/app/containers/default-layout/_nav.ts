@@ -21,13 +21,13 @@ export const navItems: INavData[] = [
   },
   {
     name: 'Yêu cầu sản xuất',
-    url: '/theme/typography',
+    url: '/request-production',
     linkProps: { fragment: 'someAnchor' },
     iconComponent: { name: 'cil-pencil' },
   },
   {
     name: 'Xác nhận đơn hàng',
-    url: '/theme/typography',
+    url: '/confirm-order',
     linkProps: { fragment: 'someAnchor' },
     iconComponent: { name: 'cil-star' },
   },

@@ -46,6 +46,8 @@ import {
 
 import { IconModule, IconSetService } from '@coreui/icons-angular';
 import { CodeProductComponent } from './views/code-product/code-product.component';
+import { RequestProductionComponent } from './views/request-production/request-production.component';
+import { ConfirmOrderComponent } from './views/confirm-order/confirm-order.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -58,7 +60,7 @@ const APP_CONTAINERS = [
 ];
 
 @NgModule({
-  declarations: [AppComponent, ...APP_CONTAINERS, CodeProductComponent],
+  declarations: [AppComponent, ...APP_CONTAINERS, CodeProductComponent, RequestProductionComponent, ConfirmOrderComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

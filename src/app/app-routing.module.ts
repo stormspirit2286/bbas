@@ -7,11 +7,13 @@ import { Page500Component } from './views/pages/page500/page500.component';
 import { LoginComponent } from './views/pages/login/login.component';
 import { RegisterComponent } from './views/pages/register/register.component';
 import { CodeProductComponent } from './views/code-product/code-product.component';
+import { RequestProductionComponent } from './views/request-production/request-production.component';
+import { ConfirmOrderComponent } from './views/confirm-order/confirm-order.component';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'dashboard',
+    redirectTo: 'code-product',
     pathMatch: 'full',
   },
   {
@@ -79,6 +81,14 @@ const routes: Routes = [
         path: 'code-product',
         component: CodeProductComponent,
       },
+      {
+        path: 'request-production',
+        component: RequestProductionComponent,
+      },
+      {
+        path: 'confirm-order',
+        component: ConfirmOrderComponent,
+      },
     ],
   },
   {
@@ -109,7 +119,7 @@ const routes: Routes = [
       title: 'Register Page',
     },
   },
-  { path: '**', redirectTo: 'dashboard' },
+  { path: '**', redirectTo: 'code-product' },
 ];
 
 @NgModule({
