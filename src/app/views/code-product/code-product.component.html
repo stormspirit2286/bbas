@@ -1,0 +1,116 @@
+<div class="fade-in">
+  <c-card class="mb-4">
+    <c-card-header> Lấy Mã Sản Phẩm </c-card-header>
+    <c-card-body>
+      <form [formGroup]="codeProductForm" class="row g-3">
+        <c-row class="mt-4">
+          <label cLabel="col" class="col-sm-2" for="maNganh">
+            Chọn khách hàng
+          </label>
+          <c-col [sm]="10">
+            <select cSelect formControlName="maKhachHang">
+              <option value="" disabled selected>
+                Chọn 1 trong các khách hàng sau
+              </option>
+              <option
+                *ngFor="let item of List_Customers"
+                [ngValue]="item.value"
+              >
+                {{ item.name }}
+              </option>
+            </select>
+          </c-col>
+        </c-row>
+        <c-row class="mt-4">
+          <label cLabel="col" class="col-sm-2" for="maNganh">
+            Chọn ngành
+          </label>
+          <c-col [sm]="10">
+            <select
+              cSelect
+              (change)="handleChangeNganh()"
+              formControlName="maNganh"
+            >
+              <option value="" disabled selected>
+                Chọn 1 trong các ngành sau
+              </option>
+              <option *ngFor="let item of LIST_NGANH" [ngValue]="item.value">
+                {{ item.name }}
+              </option>
+            </select>
+          </c-col>
+        </c-row>
+        <c-row class="mt-4">
+          <label cLabel="col" class="col-sm-2" for="maNganh">
+            Chọn sản phẩm
+          </label>
+          <c-col [sm]="10">
+            <select cSelect formControlName="maSanPham">
+              <option value="" disabled selected>
+                Chọn 1 trong các sản phẩm sau
+              </option>
+              <option
+                *ngFor="let item of List_SP_Current"
+                [ngValue]="item.value"
+              >
+                {{ item.name }}
+              </option>
+            </select>
+          </c-col>
+        </c-row>
+        <c-row class="mt-4">
+          <label cLabel="col" class="col-sm-2" for="maNganh">
+            Chọn dòng sản phẩm
+          </label>
+          <c-col [sm]="10">
+            <select cSelect formControlName="maDongSanPham">
+              <option value="" disabled selected>
+                Chọn 1 trong các dòng sản phẩm sau
+              </option>
+              <option *ngFor="let item of List_Dong_SP" [ngValue]="item.value">
+                {{ item.name }}
+              </option>
+            </select>
+          </c-col>
+        </c-row>
+        <c-row class="mt-4">
+          <label cLabel="col" class="col-sm-2" for="content">
+            Nội dung còn lại
+          </label>
+          <c-col [xs]="10">
+            <input
+              formControlName="content"
+              cFormControl
+              id="content"
+              placeholder="Nhập phần còn thiếu..."
+            />
+          </c-col>
+        </c-row>
+        <c-col
+          [xs]="12"
+          class="text-center d-flex justify-content-center gap-2"
+        >
+          <button
+            cButton
+            type="submit"
+            color="success"
+            (click)="generateMaSP()"
+            shape="rounded-pill"
+            [disabled]="codeProductForm.invalid"
+          >
+            Lấy mã sản phẩm
+          </button>
+          <button
+            cButton
+            color="secondary"
+            shape="rounded-pill"
+            (click)="resetForm()"
+          >
+            Làm mới
+          </button>
+        </c-col>
+      </form>
+      <p class="text-center mt-5" *ngIf="maSP">Mã sản phẩm là: {{ maSP }}</p>
+    </c-card-body>
+  </c-card>
+</div>

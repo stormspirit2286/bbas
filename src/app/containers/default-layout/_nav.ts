@@ -16,7 +16,7 @@ export const navItems: INavData[] = [
   // },
   {
     name: 'Mã sản phẩm',
-    url: '/theme/colors',
+    url: '/code-product',
     iconComponent: { name: 'cil-drop' },
   },
   {
