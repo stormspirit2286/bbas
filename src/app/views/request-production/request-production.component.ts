@@ -81,6 +81,7 @@ export class RequestProductionComponent implements OnInit {
       maCty: ['', Validators.required],
       ngayYeuCau: [new Date(), Validators.required],
       soDonHang: ['', Validators.required],
+      diaChiGiaoHang: ['', Validators.required],
     });
   }
 
@@ -168,5 +169,10 @@ export class RequestProductionComponent implements OnInit {
 
   exportExcel() {}
 
-  resetForm() {}
+  resetForm() {
+    this.createProductForm.reset();
+    this.createProductForm.patchValue({
+      maCty: '',
+    });
+  }
 }
