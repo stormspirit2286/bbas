@@ -32,10 +32,10 @@ export const navItems: INavData[] = [
     iconComponent: { name: 'cil-star' },
   },
   {
-    name: 'Thông tin công ty',
+    name: 'Thông tin khách hàng',
     url: '/info-company',
     linkProps: { fragment: 'someAnchor' },
-    iconComponent: { name: 'cil-star' },
+    iconComponent: { name: 'cil-puzzle' },
   },
   //   {
   //     name: 'Components',

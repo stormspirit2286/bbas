@@ -45,6 +45,7 @@ import {
   ProgressModule,
   SharedModule,
   SidebarModule,
+  TableModule,
   TabsModule,
   UtilitiesModule,
 } from '@coreui/angular';
@@ -102,6 +103,7 @@ const APP_CONTAINERS = [
     BadgeModule,
     ListGroupModule,
     CardModule,
+    TableModule,
   ],
   providers: [
     {

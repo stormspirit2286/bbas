@@ -142,6 +142,10 @@ export class CodeProductComponent implements OnInit {
   }
 
   generateMaSP() {
-    this.maSP = `${this.codeProductForm.value.maNganh}${this.codeProductForm.value.maSanPham}${this.codeProductForm.value.maKhachHang}${this.codeProductForm.value.maDongSanPham}${this.codeProductForm.value.content}`;
+    const arest = this.codeProductForm.value.content
+      .toString()
+      .padStart(4, '0');
+
+    this.maSP = `${this.codeProductForm.value.maNganh}${this.codeProductForm.value.maSanPham}${this.codeProductForm.value.maKhachHang}${this.codeProductForm.value.maDongSanPham}${arest}`;
   }
 }

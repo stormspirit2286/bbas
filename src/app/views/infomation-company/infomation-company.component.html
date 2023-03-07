@@ -1,6 +1,131 @@
 <div class="fade-in">
   <c-card class="mb-4">
-    <c-card-header> Quản Lý Thông Tin Công Ty </c-card-header>
-    <c-card-body> </c-card-body>
+    <c-card-header> Quản Lý Thông Tin Khách Hàng </c-card-header>
+    <c-card-body>
+      <ng-container *ngIf="isShowListCompany">
+        <div class="d-flex justify-content-end mb-3">
+          <button cButton color="warning" (click)="addNewCompany()">
+            Thêm mới
+          </button>
+        </div>
+        <table cTable>
+          <thead cTableColor="dark">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Mã khách hàng</th>
+              <th scope="col">Tên công ty</th>
+              <th scope="col">Quản lý</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>Mark</td>
+              <td>Otto</td>
+              <td><button cButton color="link">Link</button></td>
+            </tr>
+            <tr>
+              <th scope="row">2</th>
+              <td>Jacob</td>
+              <td>Thornton</td>
+              <td>@fat</td>
+            </tr>
+            <tr>
+              <th scope="row">3</th>
+              <td colSpan="2">Larry the Bird</td>
+              <td>@twitter</td>
+            </tr>
+          </tbody>
+        </table>
+      </ng-container>
+      <ng-container *ngIf="!isShowListCompany">
+        <form [formGroup]="companyForm" class="row g-3">
+          <c-row class="mt-4">
+            <label cLabel="col" class="col-sm-2" for="nameCompany">
+              Tên khách hàng
+            </label>
+            <c-col [sm]="10">
+              <input
+                type="text"
+                formControlName="nameCompany"
+                cFormControl
+                id="maKhachhang"
+                placeholder="Nhập mới tên công ty..."
+              />
+            </c-col>
+          </c-row>
+          <c-row class="mt-4">
+            <label cLabel="col" class="col-sm-2" for="maKhachhang">
+              Mã khách hàng
+            </label>
+            <c-col [sm]="10">
+              <input
+                type="text"
+                formControlName="maKhachHang"
+                cFormControl
+                id="maKhachhang"
+                placeholder="Nhập mã khách hàng..."
+              />
+            </c-col>
+          </c-row>
+
+          <c-row class="mt-4">
+            <label cLabel="col" class="col-sm-2" for="adrress">
+              Địa chỉ công ty
+            </label>
+            <c-col [xs]="10">
+              <input
+                type="text"
+                formControlName="diaChiCongTy"
+                cFormControl
+                id="adrress"
+                placeholder="Nhập địa chỉ..."
+                fourDigitNumber
+              />
+            </c-col>
+          </c-row>
+          <c-row class="mt-4">
+            <label cLabel="col" class="col-sm-2" for="adrress">
+              Địa chỉ giao hàng
+            </label>
+            <c-col [xs]="10" class="d-flex gap-2">
+              <input
+                type="text"
+                formControlName="diaChiCongTy"
+                cFormControl
+                id="adrress"
+                placeholder="Nhập địa chỉ giao hàng..."
+                fourDigitNumber
+              />
+              <button cButton color="info" (click)="addNewMoreAddress()">
+                <svg [cIcon]="icons.cilPlus" size="lg" title="List Icon"></svg>
+              </button>
+            </c-col>
+          </c-row>
+          <c-col
+            [xs]="12"
+            class="text-center d-flex justify-content-center gap-2"
+          >
+            <button
+              cButton
+              type="submit"
+              color="success"
+              (click)="addNewCom()"
+              shape="rounded-pill"
+            >
+              Tạo mới
+            </button>
+            <button
+              cButton
+              color="secondary"
+              shape="rounded-pill"
+              (click)="resetForm()"
+            >
+              Xoá hết
+            </button>
+          </c-col>
+        </form>
+      </ng-container>
+    </c-card-body>
   </c-card>
 </div>
