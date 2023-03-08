@@ -1,0 +1,195 @@
+<div class="fade-in">
+  <c-card class="mb-4">
+    <c-card-header> Quản Lý Thông Tin Sản Phẩm </c-card-header>
+    <c-card-body>
+      <ng-container *ngIf="isShowList">
+        <c-col [xs]="12" class="d-flex justify-content-end my-2">
+          <button
+            cButton
+            type="submit"
+            color="success"
+            (click)="addMore()"
+            shape="rounded-pill"
+          >
+            Tạo mới
+          </button>
+        </c-col>
+        <form [formGroup]="companyForm" class="row my-3">
+          <c-row class="mt-4">
+            <label cLabel="col" class="col-sm-2" for="maNganh">
+              Chọn khách hàng
+            </label>
+            <c-col [sm]="10">
+              <ng-select [searchable]="true" formControlName="maKhachHang">
+                <ng-option
+                  *ngFor="let item of listCurrentCompany"
+                  [value]="item.tenCongTy"
+                >
+                  {{ item.tenCongTy }}
+                </ng-option>
+              </ng-select>
+            </c-col>
+          </c-row>
+          <c-col
+            [xs]="12"
+            class="text-centxer d-flex justify-content-center my-2"
+          >
+            <button
+              cButton
+              type="submit"
+              color="success"
+              (click)="submitForm()"
+              shape="rounded-pill"
+              [disabled]="companyForm.invalid"
+            >
+              Lấy danh sách sản phẩm
+            </button>
+          </c-col>
+        </form>
+        <table borderless cTable hover>
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col" class="text-center" style="width: 20%">Tên SP</th>
+              <th scope="col">Mã SP</th>
+              <th scope="col" class="text-center" style="width: 40%">
+                Chi tiết KT
+              </th>
+              <th scope="col">ĐVT</th>
+              <th scope="col">##</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>Mark</td>
+              <td>Otto</td>
+              <td>@mdo</td>
+              <td>@mdo</td>
+              <td class="d-flex gap-2">
+                <div>
+                  <button
+                    cButton
+                    color="success"
+                    variant="outline"
+                    (click)="showCurrentProduct()"
+                  >
+                    Xem
+                  </button>
+                </div>
+                <div class="ml-2">
+                  <button
+                    cButton
+                    color="warning"
+                    variant="outline"
+                    (click)="deleteProduct(1)"
+                  >
+                    Xoá
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </ng-container>
+      <ng-container *ngIf="!isShowList">
+        <form [formGroup]="addNewProductForm" class="row my-3">
+          <c-row class="mt-4">
+            <label cLabel="col" class="col-sm-2" for="nameSP"> Tên SP </label>
+            <c-col [xs]="10">
+              <input
+                type="text"
+                formControlName="tenSanPham"
+                cFormControl
+                id="nameSP"
+                placeholder="Nhập tên SP..."
+              />
+            </c-col>
+          </c-row>
+          <c-row class="mt-4">
+            <label cLabel="col" class="col-sm-2" for="codeSP"> Mã SP </label>
+            <c-col [xs]="10">
+              <input
+                type="text"
+                formControlName="maSanPham"
+                cFormControl
+                id="codeSP"
+                placeholder="Nhập mã SP..."
+              />
+            </c-col>
+          </c-row>
+
+          <c-row class="mt-4">
+            <label cLabel class="col-sm-2" for="tskt">Chi tiết KT</label>
+            <c-col [xs]="10">
+              <textarea
+                placeholder="Nhập chi tiết KT..."
+                cFormControl
+                id="tskt"
+                rows="3"
+                formControlName="chiTietKyThuat"
+              ></textarea>
+            </c-col>
+          </c-row>
+          <c-row class="mt-4">
+            <label cLabel class="col-sm-2" for="tskt">ĐVT</label>
+            <c-col [xs]="10">
+              <select cSelect formControlName="donViTinh">
+                <option value="" disabled selected>Chọn ĐVT</option>
+                <option *ngFor="let item of LIST_DON_VI_TINH" [ngValue]="item">
+                  {{ item }}
+                </option>
+              </select>
+            </c-col>
+          </c-row>
+          <c-col
+            [xs]="12"
+            class="text-centxer d-flex justify-content-center gap-2 mt-5"
+          >
+            <button
+              cButton
+              type="submit"
+              color="success"
+              (click)="addNewProduct()"
+              shape="rounded-pill"
+              [disabled]="addNewProductForm.invalid"
+            >
+              Tạo mới
+            </button>
+            <button
+              cButton
+              color="secondary"
+              shape="rounded-pill"
+              (click)="resetForm()"
+            >
+              Xoá hết
+            </button>
+            <button
+              cButton
+              color="warning"
+              shape="rounded-pill"
+              (click)="backToList()"
+            >
+              Trở lại danh sách
+            </button>
+          </c-col>
+        </form>
+      </ng-container>
+    </c-card-body>
+  </c-card>
+</div>
+<c-modal
+  id="liveDemoModal"
+  [visible]="visible"
+  (visibleChange)="handleLiveDemoChange($event)"
+>
+  <c-modal-header>
+    <h5 cModalTitle>Xác nhận</h5>
+    <button (click)="toggleLiveDemo()" cButtonClose></button>
+  </c-modal-header>
+  <c-modal-body>Bạn muốn xoá công ty này?</c-modal-body>
+  <c-modal-footer>
+    <button (click)="toggleLiveDemo()" cButton color="secondary">Đóng</button>
+    <button cButton color="primary" (click)="confirmDelete()">OK</button>
+  </c-modal-footer>
+</c-modal>

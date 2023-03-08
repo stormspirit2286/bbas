@@ -22,20 +22,22 @@ export const navItems: INavData[] = [
   {
     name: 'Yêu cầu sản xuất',
     url: '/request-production',
-    linkProps: { fragment: 'someAnchor' },
     iconComponent: { name: 'cil-pencil' },
   },
   {
     name: 'Xác nhận đơn hàng',
     url: '/confirm-order',
-    linkProps: { fragment: 'someAnchor' },
     iconComponent: { name: 'cil-star' },
   },
   {
     name: 'Thông tin khách hàng',
     url: '/info-company',
-    linkProps: { fragment: 'someAnchor' },
     iconComponent: { name: 'cil-puzzle' },
+  },
+  {
+    name: 'Thông tin sản phẩm',
+    url: '/info-production',
+    iconComponent: { name: 'cil-bell' },
   },
   //   {
   //     name: 'Components',

@@ -49,21 +49,29 @@
             />
           </c-col>
         </c-row>
-        <c-row class="mt-4">
-          <label cLabel="col" class="col-sm-2" for="diaChiGiaoHang">
-            Địa chỉ giao hàng
-          </label>
+        <fieldset class="row mt-4">
+          <legend cLabel="col" cCol [sm]="2" class="pt-0">Chọn sản phẩm</legend>
           <c-col [sm]="10">
-            <input
-              cFormControl
-              id="diaChiGiaoHang"
-              formControlName="diaChiGiaoHang"
-              placeholder="Nhập địa chỉ giao hàng ..."
-              type="text"
-            />
+            <c-form-check>
+              <input
+                cFormCheckInput
+                checked
+                name="gridRadios"
+                type="radio"
+                value="option1"
+              />
+              <label cFormCheckLabel>First radio</label>
+              <div class="d-flex gap-2">
+                <input
+                  cFormControl
+                  placeholder="Nhập số lượng..."
+                  type="text"
+                />
+                <input cFormControl placeholder="Ghi chú..." type="text" />
+              </div>
+            </c-form-check>
           </c-col>
-        </c-row>
-
+        </fieldset>
         <c-col
           [xs]="12"
           class="text-center d-flex justify-content-center gap-2"
