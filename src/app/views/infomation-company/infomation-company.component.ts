@@ -26,7 +26,7 @@ export class InfomationCompanyComponent implements OnInit {
       tenCongTy: ['', Validators.required],
       maKhachHang: ['', Validators.required],
       diaChiCongTy: ['', Validators.required],
-      diaChiGiaoHang: this.fb.array([]),
+      diaChiGiaoHang: ['', Validators.required],
       sanPhamDiKem: this.fb.array([
         this.fb.group({
           maSanPham: ['', Validators.required],
@@ -42,9 +42,9 @@ export class InfomationCompanyComponent implements OnInit {
 
   prepareData() {}
 
-  get diaChiGiaoHang() {
-    return this.companyForm.controls['diaChiGiaoHang'] as FormArray;
-  }
+  // get diaChiGiaoHang() {
+  //   return this.companyForm.controls['diaChiGiaoHang'] as FormArray;
+  // }
 
   get sanPhamDiKem() {
     return this.companyForm.controls['sanPhamDiKem'] as FormArray;
@@ -54,13 +54,13 @@ export class InfomationCompanyComponent implements OnInit {
     this.isShowListCompany = false;
   }
 
-  addNewMoreAddress() {
-    this.diaChiGiaoHang.push(
-      this.fb.group({
-        address: ['', Validators.required],
-      })
-    );
-  }
+  // addNewMoreAddress() {
+  //   this.diaChiGiaoHang.push(
+  //     this.fb.group({
+  //       address: ['', Validators.required],
+  //     })
+  //   );
+  // }
 
   addNewMoreProduct() {
     this.sanPhamDiKem.push(
@@ -73,9 +73,14 @@ export class InfomationCompanyComponent implements OnInit {
     );
   }
 
-  removeThisAddress(i: number): void {
+  removeThisAddress(): void {
+    // if (i === 0) return;
+    // this.diaChiGiaoHang.removeAt(i);
+  }
+
+  removeProduct(i: number) {
     if (i === 0) return;
-    this.diaChiGiaoHang.removeAt(i);
+    this.sanPhamDiKem.removeAt(i);
   }
 
   submitForm() {

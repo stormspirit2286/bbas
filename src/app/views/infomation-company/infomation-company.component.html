@@ -100,7 +100,6 @@
               />
             </c-col>
           </c-row>
-
           <c-row class="mt-4">
             <label cLabel="col" class="col-sm-2" for="adrress">
               Địa chỉ công ty
@@ -116,7 +115,45 @@
               />
             </c-col>
           </c-row>
-          <c-row class="row mt-4">
+          <c-row class="mt-4">
+            <!-- <ng-container formArrayName="diaChiGiaoHang">
+              <div
+                *ngFor="let item of diaChiGiaoHang.controls; let i = index"
+                [formGroupName]="i"
+                class="d-flex"
+                [class.mt-2]="i !== 0"
+              > -->
+            <label cLabel="col" class="col-sm-2" for="adrressGiaoHang">
+              Địa chỉ giao hàng
+            </label>
+            <c-col [xs]="10" class="d-flex gap-2">
+              <input
+                type="text"
+                cFormControl
+                formControlName="diaChiGiaoHang"
+                id="adrressGiaoHang"
+                placeholder="Nhập địa chỉ giao hàng..."
+              />
+              <!-- <button cButton color="info" (click)="addNewMoreAddress()">
+                    <svg
+                      [cIcon]="icons.cilPlus"
+                      size="lg"
+                      title="List Icon"
+                    ></svg>
+                  </button>
+                  <button cButton color="danger" (click)="removeThisAddress()">
+                    <svg
+                      [cIcon]="icons.cilMinus"
+                      size="lg"
+                      title="List Icon"
+                    ></svg>
+                  </button> -->
+            </c-col>
+            <!-- </div>
+            </ng-container> -->
+          </c-row>
+
+          <c-row class="mt-4">
             <div class="col-12">
               <c-card>
                 <c-card-header>
@@ -158,7 +195,6 @@
                         "
                         [formGroupName]="i"
                       >
-                        <!-- <th scope="row">1</th> -->
                         <td>
                           <input
                             type="text"
@@ -199,7 +235,7 @@
                           <button
                             cButton
                             color="danger"
-                            (click)="removeThisAddress(i)"
+                            (click)="removeProduct(i)"
                             *ngIf="i !== 0"
                           >
                             <svg
@@ -216,8 +252,9 @@
               </c-card>
             </div>
           </c-row>
+
           <!-- <c-row class="mt-4">
-             <ng-container formArrayName="diaChiGiaoHang">
+            <ng-container formArrayName="diaChiGiaoHang">
               <div
                 *ngFor="let item of diaChiGiaoHang.controls; let i = index"
                 [formGroupName]="i"
@@ -250,82 +287,7 @@
                   <button
                     cButton
                     color="danger"
-                    (click)="removeThisAddress(i)"
-                    *ngIf="i !== 0"
-                  >
-                    <svg
-                      [cIcon]="icons.cilMinus"
-                      size="lg"
-                      title="List Icon"
-                    ></svg>
-                  </button>
-                </c-col>
-              </div>
-            </ng-container> -->
-
-          <!-- <label cLabel="col" class="col-sm-2" for="diaChiGiaoHang">
-              Địa chỉ giao hàng
-            </label>
-            <c-col [xs]="10">
-              <input
-                type="text"
-                formControlName="diaChiGiaoHang"
-                cFormControl
-                id="diaChiGiaoHang"
-                placeholder="Nhập địa chỉ giao hàng..."
-              />
-            </c-col>
-          </c-row> -->
-          <!-- <c-row class="mt-4">
-            <ng-container formArrayName="sanPhamDiKem">
-              <div
-                *ngFor="let item of sanPhamDiKem.controls; let i = index"
-                [formGroupName]="i"
-                class="d-flex"
-                [class.mt-2]="i !== 0"
-              >
-                <label cLabel="col" class="col-sm-2">
-                  {{ i === 0 ? "Các sản phẩm" : "" }}
-                </label>
-                <c-col [xs]="10" class="d-flex gap-2">
-                  <input
-                    type="text"
-                    formControlName="maSanPham"
-                    cFormControl
-                    placeholder="Nhập mã SP..."
-                  />
-                  <input
-                    type="text"
-                    formControlName="tenSanPham"
-                    cFormControl
-                    placeholder="Nhập tên SP..."
-                  />
-                  <input
-                    type="text"
-                    formControlName="chiTietKyThuat"
-                    cFormControl
-                    placeholder="Nhập CTKT SP..."
-                  />
-                  <select cSelect formControlName="donViTinh">
-                    <option value="" disabled selected>Chọn ĐVT</option>
-                    <option
-                      *ngFor="let item of LIST_DON_VI_TINH"
-                      [ngValue]="item"
-                    >
-                      {{ item }}
-                    </option>
-                  </select>
-                  <button cButton color="info" (click)="addNewMoreProduct()">
-                    <svg
-                      [cIcon]="icons.cilPlus"
-                      size="lg"
-                      title="List Icon"
-                    ></svg>
-                  </button>
-                  <button
-                    cButton
-                    color="danger"
-                    (click)="removeThisAddress(i)"
+                    (click)="removeThisAddress()"
                     *ngIf="i !== 0"
                   >
                     <svg
@@ -338,9 +300,10 @@
               </div>
             </ng-container>
           </c-row> -->
+
           <c-col
             [xs]="12"
-            class="text-center d-flex justify-content-center gap-2"
+            class="text-centxer d-flex justify-content-center gap-2"
           >
             <button
               cButton
