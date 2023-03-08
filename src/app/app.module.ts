@@ -52,6 +52,7 @@ import {
   SpinnerModule,
 } from '@coreui/angular';
 import { ToastrModule } from 'ngx-toastr';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 import { IconModule, IconSetService } from '@coreui/icons-angular';
 import { CodeProductComponent } from './views/code-product/code-product.component';
@@ -110,6 +111,7 @@ const APP_CONTAINERS = [
     ModalModule,
     SpinnerModule,
     ToastrModule.forRoot({ timeOut: 1000 }),
+    NgSelectModule,
   ],
   providers: [
     {

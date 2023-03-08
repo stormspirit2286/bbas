@@ -8,7 +8,7 @@
             Chọn khách hàng
           </label>
           <c-col [sm]="10">
-            <select cSelect formControlName="maKhachHang">
+            <!-- <select cSelect formControlName="maKhachHang">
               <option value="" disabled selected>
                 Chọn 1 trong các khách hàng sau
               </option>
@@ -18,7 +18,15 @@
               >
                 {{ item.name }}
               </option>
-            </select>
+            </select> -->
+            <ng-select [searchable]="true" formControlName="maKhachHang">
+              <ng-option
+                *ngFor="let item of List_Customers"
+                [value]="item.value"
+              >
+                {{ item.name }}
+              </ng-option>
+            </ng-select>
           </c-col>
         </c-row>
         <c-row class="mt-4">
