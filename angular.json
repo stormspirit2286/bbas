@@ -36,7 +36,8 @@
               "src/.htaccess"
             ],
             "styles": [
-              "src/scss/styles.scss"
+              "src/scss/styles.scss",
+              "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": [
               "node_modules/exceljs/dist/exceljs.min.js"

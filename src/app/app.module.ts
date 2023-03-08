@@ -48,7 +48,10 @@ import {
   TableModule,
   TabsModule,
   UtilitiesModule,
+  ModalModule,
+  SpinnerModule,
 } from '@coreui/angular';
+import { ToastrModule } from 'ngx-toastr';
 
 import { IconModule, IconSetService } from '@coreui/icons-angular';
 import { CodeProductComponent } from './views/code-product/code-product.component';
@@ -104,6 +107,9 @@ const APP_CONTAINERS = [
     ListGroupModule,
     CardModule,
     TableModule,
+    ModalModule,
+    SpinnerModule,
+    ToastrModule.forRoot({ timeOut: 1000 }),
   ],
   providers: [
     {

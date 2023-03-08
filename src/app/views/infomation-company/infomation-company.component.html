@@ -18,39 +18,70 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td><button cButton color="link">Link</button></td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Jacob</td>
-              <td>Thornton</td>
-              <td>@fat</td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td colSpan="2">Larry the Bird</td>
-              <td>@twitter</td>
-            </tr>
+            <ng-container *ngIf="listCurrentCompany.length; else showEmpty">
+              <tr *ngFor="let item of listCurrentCompany; let id = index">
+                <th scope="row">{{ id + 1 }}</th>
+                <td>{{ item.maKhachHang }}</td>
+                <td>{{ item.tenCongTy }}</td>
+                <td class="d-flex gap-2">
+                  <div>
+                    <button
+                      cButton
+                      color="success"
+                      variant="outline"
+                      (click)="showCurrentCompany(item)"
+                    >
+                      Xem
+                    </button>
+                  </div>
+                  <div class="ml-2">
+                    <button
+                      cButton
+                      color="warning"
+                      variant="outline"
+                      (click)="deleteCompany(item.id)"
+                    >
+                      Xoá
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+            <ng-template #showEmpty>
+              <tr>
+                <td colspan="6">
+                  <div class="text-center my-3">
+                    <p>Hiện chưa có thông tin.</p>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template #showLoading>
+              <tr>
+                <td colspan="6">
+                  <div class="text-center my-3">
+                    <c-spinner></c-spinner>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
           </tbody>
         </table>
       </ng-container>
       <ng-container *ngIf="!isShowListCompany">
         <form [formGroup]="companyForm" class="row g-3">
           <c-row class="mt-4">
-            <label cLabel="col" class="col-sm-2" for="nameCompany">
+            <label cLabel="col" class="col-sm-2" for="tenCongTy">
               Tên khách hàng
             </label>
             <c-col [sm]="10">
               <input
                 type="text"
-                formControlName="nameCompany"
+                formControlName="tenCongTy"
                 cFormControl
-                id="maKhachhang"
+                id="tenCongTy"
                 placeholder="Nhập mới tên công ty..."
+                autocomplete="off"
               />
             </c-col>
           </c-row>
@@ -65,6 +96,7 @@
                 cFormControl
                 id="maKhachhang"
                 placeholder="Nhập mã khách hàng..."
+                autocomplete="off"
               />
             </c-col>
           </c-row>
@@ -80,28 +112,232 @@
                 cFormControl
                 id="adrress"
                 placeholder="Nhập địa chỉ..."
-                fourDigitNumber
+                autocomplete="off"
               />
             </c-col>
           </c-row>
-          <c-row class="mt-4">
-            <label cLabel="col" class="col-sm-2" for="adrress">
+          <c-row class="row mt-4">
+            <div class="col-12">
+              <c-card>
+                <c-card-header>
+                  Sản phẩm
+                  <button cButton color="success" (click)="addNewMoreProduct()">
+                    <svg [cIcon]="icons.cilPlus" width="15" title="Add"></svg>
+                  </button>
+                </c-card-header>
+                <c-card-body>
+                  <table
+                    cTable
+                    class="table table-bordered mb-0"
+                    formArrayName="sanPhamDiKem"
+                  >
+                    <thead class="thead-light" cTableColor="dark">
+                      <tr>
+                        <th scope="col" class="text-center">
+                          <span>Mã SP</span>
+                        </th>
+                        <th scope="col" class="text-center">
+                          <span>Tên SP</span>
+                        </th>
+                        <th scope="col" class="text-center">
+                          <span>Chi tiết KT</span>
+                        </th>
+                        <th scope="col" class="text-center">
+                          <span>ĐVT</span>
+                        </th>
+                        <th scope="col">
+                          <span></span>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        *ngFor="
+                          let item of sanPhamDiKem.controls;
+                          let i = index
+                        "
+                        [formGroupName]="i"
+                      >
+                        <!-- <th scope="row">1</th> -->
+                        <td>
+                          <input
+                            type="text"
+                            formControlName="maSanPham"
+                            cFormControl
+                            placeholder="Nhập mã SP..."
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="text"
+                            formControlName="tenSanPham"
+                            cFormControl
+                            placeholder="Nhập tên SP..."
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="text"
+                            formControlName="chiTietKyThuat"
+                            cFormControl
+                            placeholder="Nhập CTKT SP..."
+                          />
+                        </td>
+
+                        <td>
+                          <select cSelect formControlName="donViTinh">
+                            <option value="" disabled selected>Chọn ĐVT</option>
+                            <option
+                              *ngFor="let item of LIST_DON_VI_TINH"
+                              [ngValue]="item"
+                            >
+                              {{ item }}
+                            </option>
+                          </select>
+                        </td>
+                        <td>
+                          <button
+                            cButton
+                            color="danger"
+                            (click)="removeThisAddress(i)"
+                            *ngIf="i !== 0"
+                          >
+                            <svg
+                              [cIcon]="icons.cilMinus"
+                              size="lg"
+                              title="List Icon"
+                            ></svg>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </c-card-body>
+              </c-card>
+            </div>
+          </c-row>
+          <!-- <c-row class="mt-4">
+             <ng-container formArrayName="diaChiGiaoHang">
+              <div
+                *ngFor="let item of diaChiGiaoHang.controls; let i = index"
+                [formGroupName]="i"
+                class="d-flex"
+                [class.mt-2]="i !== 0"
+              >
+                <label cLabel="col" class="col-sm-2" for="adrressGiaoHang">
+                  {{ i === 0 ? "Địa chỉ giao hàng" : "" }}
+                </label>
+                <c-col [xs]="10" class="d-flex gap-2">
+                  <input
+                    type="text"
+                    formControlName="address"
+                    cFormControl
+                    id="adrressGiaoHang"
+                    placeholder="Nhập địa chỉ giao hàng..."
+                  />
+                  <button
+                    cButton
+                    color="info"
+                    (click)="addNewMoreAddress()"
+                    [disabled]="i === 4"
+                  >
+                    <svg
+                      [cIcon]="icons.cilPlus"
+                      size="lg"
+                      title="List Icon"
+                    ></svg>
+                  </button>
+                  <button
+                    cButton
+                    color="danger"
+                    (click)="removeThisAddress(i)"
+                    *ngIf="i !== 0"
+                  >
+                    <svg
+                      [cIcon]="icons.cilMinus"
+                      size="lg"
+                      title="List Icon"
+                    ></svg>
+                  </button>
+                </c-col>
+              </div>
+            </ng-container> -->
+
+          <!-- <label cLabel="col" class="col-sm-2" for="diaChiGiaoHang">
               Địa chỉ giao hàng
             </label>
-            <c-col [xs]="10" class="d-flex gap-2">
+            <c-col [xs]="10">
               <input
                 type="text"
-                formControlName="diaChiCongTy"
+                formControlName="diaChiGiaoHang"
                 cFormControl
-                id="adrress"
+                id="diaChiGiaoHang"
                 placeholder="Nhập địa chỉ giao hàng..."
-                fourDigitNumber
               />
-              <button cButton color="info" (click)="addNewMoreAddress()">
-                <svg [cIcon]="icons.cilPlus" size="lg" title="List Icon"></svg>
-              </button>
             </c-col>
-          </c-row>
+          </c-row> -->
+          <!-- <c-row class="mt-4">
+            <ng-container formArrayName="sanPhamDiKem">
+              <div
+                *ngFor="let item of sanPhamDiKem.controls; let i = index"
+                [formGroupName]="i"
+                class="d-flex"
+                [class.mt-2]="i !== 0"
+              >
+                <label cLabel="col" class="col-sm-2">
+                  {{ i === 0 ? "Các sản phẩm" : "" }}
+                </label>
+                <c-col [xs]="10" class="d-flex gap-2">
+                  <input
+                    type="text"
+                    formControlName="maSanPham"
+                    cFormControl
+                    placeholder="Nhập mã SP..."
+                  />
+                  <input
+                    type="text"
+                    formControlName="tenSanPham"
+                    cFormControl
+                    placeholder="Nhập tên SP..."
+                  />
+                  <input
+                    type="text"
+                    formControlName="chiTietKyThuat"
+                    cFormControl
+                    placeholder="Nhập CTKT SP..."
+                  />
+                  <select cSelect formControlName="donViTinh">
+                    <option value="" disabled selected>Chọn ĐVT</option>
+                    <option
+                      *ngFor="let item of LIST_DON_VI_TINH"
+                      [ngValue]="item"
+                    >
+                      {{ item }}
+                    </option>
+                  </select>
+                  <button cButton color="info" (click)="addNewMoreProduct()">
+                    <svg
+                      [cIcon]="icons.cilPlus"
+                      size="lg"
+                      title="List Icon"
+                    ></svg>
+                  </button>
+                  <button
+                    cButton
+                    color="danger"
+                    (click)="removeThisAddress(i)"
+                    *ngIf="i !== 0"
+                  >
+                    <svg
+                      [cIcon]="icons.cilMinus"
+                      size="lg"
+                      title="List Icon"
+                    ></svg>
+                  </button>
+                </c-col>
+              </div>
+            </ng-container>
+          </c-row> -->
           <c-col
             [xs]="12"
             class="text-center d-flex justify-content-center gap-2"
@@ -110,8 +346,9 @@
               cButton
               type="submit"
               color="success"
-              (click)="addNewCom()"
+              (click)="submitForm()"
               shape="rounded-pill"
+              [disabled]="companyForm.invalid"
             >
               Tạo mới
             </button>
@@ -123,9 +360,33 @@
             >
               Xoá hết
             </button>
+            <button
+              cButton
+              color="warning"
+              shape="rounded-pill"
+              (click)="backToList()"
+            >
+              Trở lại danh sách
+            </button>
           </c-col>
         </form>
       </ng-container>
     </c-card-body>
   </c-card>
 </div>
+
+<c-modal
+  id="liveDemoModal"
+  [visible]="visible"
+  (visibleChange)="handleLiveDemoChange($event)"
+>
+  <c-modal-header>
+    <h5 cModalTitle>Xác nhận</h5>
+    <button (click)="toggleLiveDemo()" cButtonClose></button>
+  </c-modal-header>
+  <c-modal-body>Bạn muốn xoá công ty này?</c-modal-body>
+  <c-modal-footer>
+    <button (click)="toggleLiveDemo()" cButton color="secondary">Đóng</button>
+    <button cButton color="primary" (click)="confirmDelete()">OK</button>
+  </c-modal-footer>
+</c-modal>

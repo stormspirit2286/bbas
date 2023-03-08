@@ -43,8 +43,8 @@ export class CodeProductComponent implements OnInit {
     { id: 7, name: 'CÔNG TY CỔ PHẦN PHÂN BÓN BA LÁ XANH', value: 'KH00007' },
     { id: 8, name: 'CÔNG TY CỔ PHẦN BAO BÌ NHƠN TRẠCH', value: 'KH00008' },
     { id: 9, name: 'CÔNG TY CỔ PHẦN BESTMIX', value: 'KH00009' },
-    { id: 10, name: 'CÔNG TY CỔ PHẦN MC-BIFI BAUCHEMIE', value: 'KH000011' },
-    { id: 11, name: 'CÔNG TY TNHH BIO99', value: 'KH000012' },
+    { id: 10, name: 'CÔNG TY CỔ PHẦN MC-BIFI BAUCHEMIE', value: 'KH00011' },
+    { id: 11, name: 'CÔNG TY TNHH BIO99', value: 'KH00012' },
   ];
 
   LIST_NGANH = [
