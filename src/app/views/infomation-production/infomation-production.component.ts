@@ -35,7 +35,6 @@ export class InfomationProductionComponent implements OnInit {
     });
     this.listCurrentCompany =
       JSON.parse(localStorage.getItem('DanhSachCongTy') || '[]') || [];
-    console.log(this.listCurrentCompany);
   }
 
   addMore() {
@@ -92,18 +91,12 @@ export class InfomationProductionComponent implements OnInit {
     this.listCurrentProduct = JSON.parse(
       localStorage.getItem('DanhSachSanPham') || '[]'
     );
-    console.log(this.companyForm.value);
-
     this.listCurrentProductByCompany = this.listCurrentProduct.filter(
       (item) => item.maKhachHang === this.companyForm.value.maKhachHang
     );
-
-    console.log('listProduct', this.listCurrentProductByCompany);
   }
 
   createProduct() {
-    console.log(this.isCreateNewProduct);
-
     if (this.isCreateNewProduct) {
       const data = { ...this.addNewProductForm.value, id: this.generateId() };
       this.listCurrentProduct.push(data);
@@ -134,6 +127,7 @@ export class InfomationProductionComponent implements OnInit {
       this.listCurrentProduct.splice(index, 1);
       this.listCurrentProductByCompany.push(data);
       this.listCurrentProduct.push(data);
+      localStorage.removeItem('DanhSachSanPham');
       localStorage.setItem(
         'DanhSachSanPham',
         JSON.stringify(this.listCurrentProduct)
@@ -144,8 +138,6 @@ export class InfomationProductionComponent implements OnInit {
       });
       this.toastr.success('Cập nhật SP thành công !!!');
     }
-
-    // console.log('value', this.addNewProductForm.value);
   }
 
   resetForm() {

@@ -1,4 +1,3 @@
-import { FourDigitNumberDirective } from './views/directive/custom-number.directive';
 import { NgModule } from '@angular/core';
 import {
   HashLocationStrategy,
@@ -78,7 +77,6 @@ const APP_CONTAINERS = [
     CodeProductComponent,
     RequestProductionComponent,
     ConfirmOrderComponent,
-    FourDigitNumberDirective,
     InfomationCompanyComponent,
     InfomationProductionComponent,
   ],
