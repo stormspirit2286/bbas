@@ -8,17 +8,14 @@
             Chọn khách hàng
           </label>
           <c-col [sm]="10">
-            <select cSelect formControlName="maCty">
-              <option value="" disabled selected>
-                Chọn 1 trong các khách hàng sau
-              </option>
-              <option
-                *ngFor="let item of List_Customers"
-                [ngValue]="item.value"
+            <ng-select [searchable]="true" formControlName="maKhachHang">
+              <ng-option
+                *ngFor="let item of listCurrentCompany"
+                [value]="item.maKhachHang"
               >
-                {{ item.name }}
-              </option>
-            </select>
+                {{ item.tenCongTy }}
+              </ng-option>
+            </ng-select>
           </c-col>
         </c-row>
         <c-row class="mt-4">
@@ -49,29 +46,40 @@
             />
           </c-col>
         </c-row>
-        <fieldset class="row mt-4">
-          <legend cLabel="col" cCol [sm]="2" class="pt-0">Chọn sản phẩm</legend>
-          <c-col [sm]="10">
-            <c-form-check>
-              <input
-                cFormCheckInput
-                checked
-                name="gridRadios"
-                type="radio"
-                value="option1"
-              />
-              <label cFormCheckLabel>First radio</label>
-              <div class="d-flex gap-2">
-                <input
-                  cFormControl
-                  placeholder="Nhập số lượng..."
-                  type="text"
-                />
-                <input cFormControl placeholder="Ghi chú..." type="text" />
-              </div>
-            </c-form-check>
-          </c-col>
-        </fieldset>
+        <ng-container *ngIf="listProductsByCompany?.length">
+          <ng-container
+            *ngFor="let item of listProductsByCompany; let id = index"
+          >
+            <c-row [ngClass]="id === 0 ? 'mt-4' : '0'">
+              <label cLabel="col" class="col-sm-2">
+                {{ id === 0 ? "Sản Phẩm" : "" }}
+              </label>
+              <c-col [sm]="10" class="my-2">
+                <c-form-check>
+                  <input
+                    cFormCheckInput
+                    id="gridCheck"
+                    name="gridCheck"
+                    type="checkbox"
+                  />
+                  <label cFormCheckLabel for="gridCheck">{{
+                    item.tenSanPham
+                  }}</label>
+                  <div class="d-flex gap-2">
+                    <input
+                      cFormControl
+                      placeholder="Nhập số lượng..."
+                      type="text"
+                      appOnlyNumber
+                    />
+                    <input cFormControl placeholder="Ghi chú..." type="text" />
+                  </div>
+                </c-form-check>
+              </c-col>
+            </c-row>
+          </ng-container>
+        </ng-container>
+
         <c-col
           [xs]="12"
           class="text-center d-flex justify-content-center gap-2"

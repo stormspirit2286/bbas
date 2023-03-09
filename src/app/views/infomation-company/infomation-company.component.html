@@ -12,18 +12,18 @@
           <thead cTableColor="dark">
             <tr>
               <th scope="col">#</th>
-              <th scope="col">Mã khách hàng</th>
-              <th scope="col">Tên công ty</th>
-              <th scope="col">Quản lý</th>
+              <th scope="col" class="text-center">Mã khách hàng</th>
+              <th scope="col" class="text-center">Tên công ty</th>
+              <th scope="col" class="text-center">Quản lý</th>
             </tr>
           </thead>
           <tbody>
             <ng-container *ngIf="listCurrentCompany.length; else showEmpty">
               <tr *ngFor="let item of listCurrentCompany; let id = index">
                 <th scope="row">{{ id + 1 }}</th>
-                <td>{{ item.maKhachHang }}</td>
-                <td>{{ item.tenCongTy }}</td>
-                <td class="d-flex gap-2">
+                <td class="text-center">{{ item.maKhachHang }}</td>
+                <td class="text-center">{{ item.tenCongTy }}</td>
+                <td class="text-center d-flex justify-content-center gap-2">
                   <div>
                     <button
                       cButton

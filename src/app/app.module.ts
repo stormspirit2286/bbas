@@ -1,3 +1,4 @@
+import { OnlyNumberDirective } from './views/directive/only-number.directive';
 import { NgModule } from '@angular/core';
 import {
   HashLocationStrategy,
@@ -79,6 +80,7 @@ const APP_CONTAINERS = [
     ConfirmOrderComponent,
     InfomationCompanyComponent,
     InfomationProductionComponent,
+    OnlyNumberDirective,
   ],
   imports: [
     BrowserModule,
