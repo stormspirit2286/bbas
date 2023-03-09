@@ -5,3 +5,12 @@ export interface KhachHang {
   diaChiCongTy: string;
   diaChiGiaoHang: string[];
 }
+
+export interface SanPham {
+  id: string;
+  maKhachHang: string;
+  maSanPham: string;
+  tenSanPham: string;
+  chiTietKyThuat: string;
+  donViTinh: string;
+}

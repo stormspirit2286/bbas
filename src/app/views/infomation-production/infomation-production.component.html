@@ -14,7 +14,7 @@
             Tạo mới
           </button>
         </c-col>
-        <form [formGroup]="companyForm" class="row my-3">
+        <form [formGroup]="companyForm" class="row">
           <c-row class="mt-4">
             <label cLabel="col" class="col-sm-2" for="maNganh">
               Chọn khách hàng
@@ -23,7 +23,7 @@
               <ng-select [searchable]="true" formControlName="maKhachHang">
                 <ng-option
                   *ngFor="let item of listCurrentCompany"
-                  [value]="item.tenCongTy"
+                  [value]="item.maKhachHang"
                 >
                   {{ item.tenCongTy }}
                 </ng-option>
@@ -32,13 +32,13 @@
           </c-row>
           <c-col
             [xs]="12"
-            class="text-centxer d-flex justify-content-center my-2"
+            class="text-centxer d-flex justify-content-center my-3"
           >
             <button
               cButton
               type="submit"
               color="success"
-              (click)="submitForm()"
+              (click)="searchProductByCompany()"
               shape="rounded-pill"
               [disabled]="companyForm.invalid"
             >
@@ -46,54 +46,86 @@
             </button>
           </c-col>
         </form>
-        <table borderless cTable hover>
+        <table [striped]="true" cTable>
           <thead>
             <tr>
               <th scope="col">#</th>
               <th scope="col" class="text-center" style="width: 20%">Tên SP</th>
-              <th scope="col">Mã SP</th>
+              <th scope="col" class="text-center">Mã SP</th>
               <th scope="col" class="text-center" style="width: 40%">
                 Chi tiết KT
               </th>
               <th scope="col">ĐVT</th>
-              <th scope="col">##</th>
+              <th scope="col" class="text-center">##</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-              <td>@mdo</td>
-              <td class="d-flex gap-2">
-                <div>
-                  <button
-                    cButton
-                    color="success"
-                    variant="outline"
-                    (click)="showCurrentProduct()"
-                  >
-                    Xem
-                  </button>
-                </div>
-                <div class="ml-2">
-                  <button
-                    cButton
-                    color="warning"
-                    variant="outline"
-                    (click)="deleteProduct(1)"
-                  >
-                    Xoá
-                  </button>
-                </div>
-              </td>
-            </tr>
+            <ng-container
+              *ngIf="listCurrentProductByCompany?.length; else showEmpty"
+            >
+              <tr
+                *ngFor="let item of listCurrentProductByCompany; let id = index"
+              >
+                <th scope="row">{{ id + 1 }}</th>
+                <td class="text-center">{{ item?.tenSanPham }}</td>
+                <td class="text-center">{{ item?.maSanPham }}</td>
+                <td class="text-center">{{ item?.chiTietKyThuat }}</td>
+                <td>{{ item?.donViTinh }}</td>
+                <td
+                  class="d-flex justify-content-center alige-items-center gap-2"
+                >
+                  <div>
+                    <button
+                      cButton
+                      color="success"
+                      variant="outline"
+                      (click)="showCurrentProduct(item)"
+                    >
+                      Xem
+                    </button>
+                  </div>
+                  <div class="ml-2">
+                    <button
+                      cButton
+                      color="warning"
+                      variant="outline"
+                      (click)="deleteProduct(item.id)"
+                    >
+                      Xoá
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+            <ng-template #showEmpty>
+              <tr>
+                <td colspan="6">
+                  <div class="text-center my-3">
+                    <p>Hiện chưa có thông tin.</p>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
           </tbody>
         </table>
       </ng-container>
       <ng-container *ngIf="!isShowList">
         <form [formGroup]="addNewProductForm" class="row my-3">
+          <c-row class="mt-4">
+            <label cLabel="col" class="col-sm-2" for="maNganh">
+              Chọn tên công ty
+            </label>
+            <c-col [sm]="10">
+              <ng-select [searchable]="true" formControlName="maKhachHang">
+                <ng-option
+                  *ngFor="let item of listCurrentCompany"
+                  [value]="item.maKhachHang"
+                >
+                  {{ item.tenCongTy }}
+                </ng-option>
+              </ng-select>
+            </c-col>
+          </c-row>
           <c-row class="mt-4">
             <label cLabel="col" class="col-sm-2" for="nameSP"> Tên SP </label>
             <c-col [xs]="10">
@@ -103,6 +135,7 @@
                 cFormControl
                 id="nameSP"
                 placeholder="Nhập tên SP..."
+                autocomplete="off"
               />
             </c-col>
           </c-row>
@@ -115,6 +148,7 @@
                 cFormControl
                 id="codeSP"
                 placeholder="Nhập mã SP..."
+                autocomplete="off"
               />
             </c-col>
           </c-row>
@@ -128,6 +162,7 @@
                 id="tskt"
                 rows="3"
                 formControlName="chiTietKyThuat"
+                autocomplete="off"
               ></textarea>
             </c-col>
           </c-row>
@@ -150,11 +185,11 @@
               cButton
               type="submit"
               color="success"
-              (click)="addNewProduct()"
+              (click)="createProduct()"
               shape="rounded-pill"
               [disabled]="addNewProductForm.invalid"
             >
-              Tạo mới
+              {{ isCreateNewProduct ? "Tạo mới" : "Cập nhật" }}
             </button>
             <button
               cButton

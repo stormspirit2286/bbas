@@ -18,7 +18,6 @@ export class InfomationCompanyComponent implements OnInit {
   currentCompanyId = -1;
   currentCompany?: KhachHang;
   listCurrentCompany: KhachHang[] = [];
-  LIST_DON_VI_TINH = ['Cái', 'Chiếc', 'Bao'];
   constructor(private fb: FormBuilder, private toastr: ToastrService) {}
 
   ngOnInit() {
@@ -27,14 +26,6 @@ export class InfomationCompanyComponent implements OnInit {
       maKhachHang: ['', Validators.required],
       diaChiCongTy: ['', Validators.required],
       diaChiGiaoHang: ['', Validators.required],
-      sanPhamDiKem: this.fb.array([
-        this.fb.group({
-          maSanPham: ['', Validators.required],
-          tenSanPham: ['', Validators.required],
-          chiTietKyThuat: ['', Validators.required],
-          donViTinh: ['', Validators.required],
-        }),
-      ]),
     });
     this.listCurrentCompany =
       JSON.parse(localStorage.getItem('DanhSachCongTy') || '[]') || [];
@@ -46,9 +37,9 @@ export class InfomationCompanyComponent implements OnInit {
   //   return this.companyForm.controls['diaChiGiaoHang'] as FormArray;
   // }
 
-  get sanPhamDiKem() {
-    return this.companyForm.controls['sanPhamDiKem'] as FormArray;
-  }
+  // get sanPhamDiKem() {
+  //   return this.companyForm.controls['sanPhamDiKem'] as FormArray;
+  // }
 
   addNewCompany() {
     this.isShowListCompany = false;
@@ -62,26 +53,26 @@ export class InfomationCompanyComponent implements OnInit {
   //   );
   // }
 
-  addNewMoreProduct() {
-    this.sanPhamDiKem.push(
-      this.fb.group({
-        maSanPham: ['', Validators.required],
-        tenSanPham: ['', Validators.required],
-        chiTietKyThuat: ['', Validators.required],
-        donViTinh: ['', Validators.required],
-      })
-    );
-  }
+  // addNewMoreProduct() {
+  //   this.sanPhamDiKem.push(
+  //     this.fb.group({
+  //       maSanPham: ['', Validators.required],
+  //       tenSanPham: ['', Validators.required],
+  //       chiTietKyThuat: ['', Validators.required],
+  //       donViTinh: ['', Validators.required],
+  //     })
+  //   );
+  // }
 
-  removeThisAddress(): void {
-    // if (i === 0) return;
-    // this.diaChiGiaoHang.removeAt(i);
-  }
+  // removeThisAddress(): void {
+  // if (i === 0) return;
+  // this.diaChiGiaoHang.removeAt(i);
+  // }
 
-  removeProduct(i: number) {
-    if (i === 0) return;
-    this.sanPhamDiKem.removeAt(i);
-  }
+  // removeProduct(i: number) {
+  //   if (i === 0) return;
+  //   this.sanPhamDiKem.removeAt(i);
+  // }
 
   submitForm() {
     if (this.companyForm.invalid) return;
@@ -141,19 +132,15 @@ export class InfomationCompanyComponent implements OnInit {
       tenCongTy: data.tenCongTy,
       maKhachHang: data.maKhachHang,
       diaChiCongTy: data.diaChiCongTy,
-      diaChiGiaoHang: this.fb.array([
-        this.fb.group({
-          address: '',
-        }),
-      ]),
-      sanPhamDiKem: this.fb.array([
-        this.fb.group({
-          maSanPham: ['', Validators.required],
-          tenSanPham: ['', Validators.required],
-          chiTietKyThuat: ['', Validators.required],
-          donViTinh: ['', Validators.required],
-        }),
-      ]),
+      diaChiGiaoHang: data.diaChiGiaoHang,
+      // sanPhamDiKem: this.fb.array([
+      //   this.fb.group({
+      //     maSanPham: ['', Validators.required],
+      //     tenSanPham: ['', Validators.required],
+      //     chiTietKyThuat: ['', Validators.required],
+      //     donViTinh: ['', Validators.required],
+      //   }),
+      // ]),
     });
     this.isCreateNewCompany = false;
     this.isShowListCompany = false;
