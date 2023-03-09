@@ -116,44 +116,6 @@
             </c-col>
           </c-row>
           <c-row class="mt-4">
-            <!-- <ng-container formArrayName="diaChiGiaoHang">
-              <div
-                *ngFor="let item of diaChiGiaoHang.controls; let i = index"
-                [formGroupName]="i"
-                class="d-flex"
-                [class.mt-2]="i !== 0"
-              > -->
-            <label cLabel="col" class="col-sm-2" for="adrressGiaoHang">
-              Địa chỉ giao hàng
-            </label>
-            <c-col [xs]="10" class="d-flex gap-2">
-              <input
-                type="text"
-                cFormControl
-                formControlName="diaChiGiaoHang"
-                id="adrressGiaoHang"
-                placeholder="Nhập địa chỉ giao hàng..."
-              />
-              <!-- <button cButton color="info" (click)="addNewMoreAddress()">
-                    <svg
-                      [cIcon]="icons.cilPlus"
-                      size="lg"
-                      title="List Icon"
-                    ></svg>
-                  </button>
-                  <button cButton color="danger" (click)="removeThisAddress()">
-                    <svg
-                      [cIcon]="icons.cilMinus"
-                      size="lg"
-                      title="List Icon"
-                    ></svg>
-                  </button> -->
-            </c-col>
-            <!-- </div>
-            </ng-container> -->
-          </c-row>
-
-          <!-- <c-row class="mt-4">
             <ng-container formArrayName="diaChiGiaoHang">
               <div
                 *ngFor="let item of diaChiGiaoHang.controls; let i = index"
@@ -187,7 +149,7 @@
                   <button
                     cButton
                     color="danger"
-                    (click)="removeThisAddress()"
+                    (click)="removeThisAddress(i)"
                     *ngIf="i !== 0"
                   >
                     <svg
@@ -199,7 +161,7 @@
                 </c-col>
               </div>
             </ng-container>
-          </c-row> -->
+          </c-row>
 
           <c-col
             [xs]="12"
@@ -213,7 +175,7 @@
               shape="rounded-pill"
               [disabled]="companyForm.invalid"
             >
-              Tạo mới
+              {{ isCreateNewCompany ? "Tạo mới" : "Cập nhật" }}
             </button>
             <button
               cButton

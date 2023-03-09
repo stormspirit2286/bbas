@@ -1,5 +1,6 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
+import { KhachHang } from '../models/khachKhang';
 
 @Component({
   selector: 'app-code-product',
@@ -16,6 +17,7 @@ export class CodeProductComponent implements OnInit {
     value: string;
     idNganh: string;
   }[] = [];
+  listCurrentCompany: KhachHang[] = [];
 
   List_Customers = [
     {
@@ -122,6 +124,8 @@ export class CodeProductComponent implements OnInit {
       maDongSanPham: ['', Validators.required],
       content: ['', Validators.required],
     });
+    this.listCurrentCompany =
+      JSON.parse(localStorage.getItem('DanhSachCongTy') || '[]') || [];
   }
 
   handleChangeNganh() {

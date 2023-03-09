@@ -4,27 +4,14 @@
     <c-card-body>
       <form [formGroup]="codeProductForm" class="row g-3">
         <c-row class="mt-4">
-          <label cLabel="col" class="col-sm-2" for="maNganh">
-            Chọn khách hàng
-          </label>
+          <label cLabel="col" class="col-sm-2"> Chọn khách hàng </label>
           <c-col [sm]="10">
-            <!-- <select cSelect formControlName="maKhachHang">
-              <option value="" disabled selected>
-                Chọn 1 trong các khách hàng sau
-              </option>
-              <option
-                *ngFor="let item of List_Customers"
-                [ngValue]="item.value"
-              >
-                {{ item.name }}
-              </option>
-            </select> -->
             <ng-select [searchable]="true" formControlName="maKhachHang">
               <ng-option
-                *ngFor="let item of List_Customers"
-                [value]="item.value"
+                *ngFor="let item of listCurrentCompany"
+                [value]="item.maKhachHang"
               >
-                {{ item.name }}
+                {{ item.tenCongTy }}
               </ng-option>
             </ng-select>
           </c-col>

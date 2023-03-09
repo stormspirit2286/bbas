@@ -25,7 +25,11 @@ export class InfomationCompanyComponent implements OnInit {
       tenCongTy: ['', Validators.required],
       maKhachHang: ['', Validators.required],
       diaChiCongTy: ['', Validators.required],
-      diaChiGiaoHang: ['', Validators.required],
+      diaChiGiaoHang: this.fb.array([
+        this.fb.group({
+          address: ['', Validators.required],
+        }),
+      ]),
     });
     this.listCurrentCompany =
       JSON.parse(localStorage.getItem('DanhSachCongTy') || '[]') || [];
@@ -33,59 +37,55 @@ export class InfomationCompanyComponent implements OnInit {
 
   prepareData() {}
 
-  // get diaChiGiaoHang() {
-  //   return this.companyForm.controls['diaChiGiaoHang'] as FormArray;
-  // }
-
-  // get sanPhamDiKem() {
-  //   return this.companyForm.controls['sanPhamDiKem'] as FormArray;
-  // }
+  get diaChiGiaoHang() {
+    return this.companyForm.controls['diaChiGiaoHang'] as FormArray;
+  }
 
   addNewCompany() {
     this.isShowListCompany = false;
   }
 
-  // addNewMoreAddress() {
-  //   this.diaChiGiaoHang.push(
-  //     this.fb.group({
-  //       address: ['', Validators.required],
-  //     })
-  //   );
-  // }
+  addNewMoreAddress() {
+    this.diaChiGiaoHang.push(
+      this.fb.group({
+        address: ['', Validators.required],
+      })
+    );
+  }
 
-  // addNewMoreProduct() {
-  //   this.sanPhamDiKem.push(
-  //     this.fb.group({
-  //       maSanPham: ['', Validators.required],
-  //       tenSanPham: ['', Validators.required],
-  //       chiTietKyThuat: ['', Validators.required],
-  //       donViTinh: ['', Validators.required],
-  //     })
-  //   );
-  // }
-
-  // removeThisAddress(): void {
-  // if (i === 0) return;
-  // this.diaChiGiaoHang.removeAt(i);
-  // }
-
-  // removeProduct(i: number) {
-  //   if (i === 0) return;
-  //   this.sanPhamDiKem.removeAt(i);
-  // }
+  removeThisAddress(i: number): void {
+    if (i === 0) return;
+    this.diaChiGiaoHang.removeAt(i);
+  }
 
   submitForm() {
     if (this.companyForm.invalid) return;
-    this.listCurrentCompany.push({
-      ...this.companyForm.value,
-      id: this.listCurrentCompany.length + 1,
-    });
+    const data = { ...this.companyForm.value };
+    let tempCompany;
+    if (this.isCreateNewCompany) {
+      tempCompany = {
+        ...data,
+        id: this.listCurrentCompany.length + 1,
+      };
+      this.listCurrentCompany.push(tempCompany);
+      this.toastr.success('Tạo mới thành công !!!');
+    } else {
+      const index = this.listCurrentCompany.findIndex(
+        (item) => item.id === this.currentCompany?.id
+      );
+      if (index === -1) return;
+      tempCompany = {
+        ...data,
+        id: this.currentCompany?.id,
+      };
+      this.listCurrentCompany.splice(index, 1, tempCompany);
+      this.toastr.success('Cập nhật thành công !!!');
+    }
     localStorage.setItem(
       'DanhSachCongTy',
       JSON.stringify(this.listCurrentCompany)
     );
     this.companyForm.reset();
-    this.toastr.success('Tạo mới thành công !!!');
   }
 
   resetForm() {
@@ -126,21 +126,12 @@ export class InfomationCompanyComponent implements OnInit {
   }
 
   showCurrentCompany(data: KhachHang) {
-    console.log('data', data);
     this.currentCompany = data;
     this.companyForm.patchValue({
       tenCongTy: data.tenCongTy,
       maKhachHang: data.maKhachHang,
       diaChiCongTy: data.diaChiCongTy,
       diaChiGiaoHang: data.diaChiGiaoHang,
-      // sanPhamDiKem: this.fb.array([
-      //   this.fb.group({
-      //     maSanPham: ['', Validators.required],
-      //     tenSanPham: ['', Validators.required],
-      //     chiTietKyThuat: ['', Validators.required],
-      //     donViTinh: ['', Validators.required],
-      //   }),
-      // ]),
     });
     this.isCreateNewCompany = false;
     this.isShowListCompany = false;

@@ -2,6 +2,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { KhachHang, SanPham } from '../models/khachKhang';
+import { LIST_DON_VI_TINH } from '../models/khachKhang';
 
 @Component({
   selector: 'app-infomation-production',
@@ -18,7 +19,7 @@ export class InfomationProductionComponent implements OnInit {
   listCurrentProduct: SanPham[] = [];
   listCurrentProductByCompany: SanPham[] = [];
   currentProductId = '';
-  LIST_DON_VI_TINH = ['Cái', 'Chiếc', 'Bao'];
+  LIST_DON_VI_TINH = LIST_DON_VI_TINH;
   constructor(private fb: FormBuilder, private toastr: ToastrService) {}
 
   ngOnInit(): void {
@@ -39,6 +40,7 @@ export class InfomationProductionComponent implements OnInit {
 
   addMore() {
     this.isShowList = false;
+    this.isCreateNewProduct = true;
   }
 
   deleteProduct(id: string) {
@@ -58,11 +60,10 @@ export class InfomationProductionComponent implements OnInit {
     const index = this.listCurrentProduct.findIndex(
       (item) => item.id === this.currentProductId
     );
-    if (index === -1) return;
     const index2 = this.listCurrentProductByCompany.findIndex(
       (item) => item.id === this.currentProductId
     );
-    if (index2 === -1) return;
+    if (index === -1 || index2 === -1) return;
     this.listCurrentProductByCompany.splice(index2, 1);
     this.listCurrentProduct.splice(index, 1);
 
@@ -96,7 +97,7 @@ export class InfomationProductionComponent implements OnInit {
     );
   }
 
-  createProduct() {
+  submitProductForm() {
     if (this.isCreateNewProduct) {
       const data = { ...this.addNewProductForm.value, id: this.generateId() };
       this.listCurrentProduct.push(data);
@@ -118,11 +119,10 @@ export class InfomationProductionComponent implements OnInit {
       const index = this.listCurrentProduct.findIndex(
         (item) => item.id === this.currentProductId
       );
-      if (index === -1) return;
       const index2 = this.listCurrentProductByCompany.findIndex(
         (item) => item.id === this.currentProductId
       );
-      if (index2 === -1) return;
+      if (index === -1 || index2 === -1) return;
       this.listCurrentProductByCompany.splice(index2, 1);
       this.listCurrentProduct.splice(index, 1);
       this.listCurrentProductByCompany.push(data);
@@ -142,11 +142,17 @@ export class InfomationProductionComponent implements OnInit {
 
   resetForm() {
     this.addNewProductForm.reset();
+    this.addNewProductForm.patchValue({
+      donViTinh: '',
+    });
     this.isCreateNewProduct = false;
   }
 
   backToList() {
     this.isShowList = true;
+    this.addNewProductForm.reset();
+    this.resetForm();
+    this.searchProductByCompany();
   }
 
   generateId() {

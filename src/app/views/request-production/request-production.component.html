@@ -34,9 +34,7 @@
           </c-col>
         </c-row>
         <c-row class="mt-4">
-          <label cLabel="col" class="col-sm-2" for="maNganh">
-            Số đơn hàng
-          </label>
+          <label cLabel="col" class="col-sm-2"> Số đơn hàng </label>
           <c-col [sm]="10">
             <input
               cFormControl
@@ -44,6 +42,19 @@
               placeholder="Nhập số đơn hàng ..."
               type="text"
             />
+          </c-col>
+        </c-row>
+        <c-row class="mt-4">
+          <label cLabel="col" class="col-sm-2"> Địa chỉ giao hàng </label>
+          <c-col [sm]="10">
+            <select
+              aria-label="Default select example"
+              cSelect
+              formControlName="diaChiGiaoHang"
+            >
+              <option value="" disabled selected>Chọn địa chỉ giao hàng</option>
+              <option value="1">One</option>
+            </select>
           </c-col>
         </c-row>
         <ng-container *ngIf="listProductsByCompany?.length">
@@ -58,11 +69,11 @@
                 <c-form-check>
                   <input
                     cFormCheckInput
-                    id="gridCheck"
+                    id="{{ item.id }}"
                     name="gridCheck"
                     type="checkbox"
                   />
-                  <label cFormCheckLabel for="gridCheck">{{
+                  <label cFormCheckLabel for="{{ item.id }}">{{
                     item.tenSanPham
                   }}</label>
                   <div class="d-flex gap-2">
@@ -88,9 +99,8 @@
             cButton
             type="submit"
             color="success"
-            (click)="exportExcel()"
+            (click)="exportToExcel()"
             shape="rounded-pill"
-            [disabled]="createProductForm.invalid"
           >
             Download file
           </button>
