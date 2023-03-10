@@ -3,7 +3,7 @@ export interface KhachHang {
   tenCongTy: string;
   maKhachHang: string;
   diaChiCongTy: string;
-  diaChiGiaoHang: string[];
+  diaChiGiaoHang: { address: string }[];
 }
 
 export interface SanPham {
@@ -13,6 +13,18 @@ export interface SanPham {
   tenSanPham: string;
   chiTietKyThuat: string;
   donViTinh: string;
+  isChecked?: boolean;
+}
+
+export interface DonHang {
+  id?: string;
+  maSanPham: string;
+  tenSanPham: string;
+  chiTietKyThuat: string;
+  donViTinh: string;
+  soLuong?: number;
+  ngayCanGiaoHang?: string;
+  ghiChu?: string;
 }
 
 export const LIST_DON_VI_TINH = ['Cái', 'Kg'];

@@ -53,42 +53,65 @@
               formControlName="diaChiGiaoHang"
             >
               <option value="" disabled selected>Chọn địa chỉ giao hàng</option>
-              <option value="1">One</option>
+              <option
+                *ngFor="let item of listDiaChiGiaoHang"
+                [value]="item?.address"
+              >
+                {{ item?.address }}
+              </option>
             </select>
           </c-col>
         </c-row>
-        <ng-container *ngIf="listProductsByCompany?.length">
-          <ng-container
-            *ngFor="let item of listProductsByCompany; let id = index"
-          >
-            <c-row [ngClass]="id === 0 ? 'mt-4' : '0'">
-              <label cLabel="col" class="col-sm-2">
-                {{ id === 0 ? "Sản Phẩm" : "" }}
-              </label>
-              <c-col [sm]="10" class="my-2">
-                <c-form-check>
+
+        <ng-container
+          formArrayName="danhSachSanPham"
+          *ngIf="listProductsByCompany.length"
+        >
+          <fieldset class="row mt-4">
+            <legend cLabel="col" cCol [sm]="2" class="pt-0">
+              Lựa chọn sản phẩm
+            </legend>
+            <c-col [sm]="10">
+              <div
+                *ngFor="let item of danhSachSanPham.controls; let id = index"
+                [formGroupName]="id"
+              >
+                <c-form-check class="mt-2">
                   <input
                     cFormCheckInput
-                    id="{{ item.id }}"
-                    name="gridCheck"
                     type="checkbox"
+                    formControlName="isChecked"
+                    (change)="handleChange($event, item)"
                   />
-                  <label cFormCheckLabel for="{{ item.id }}">{{
-                    item.tenSanPham
-                  }}</label>
-                  <div class="d-flex gap-2">
-                    <input
-                      cFormControl
-                      placeholder="Nhập số lượng..."
-                      type="text"
-                      appOnlyNumber
-                    />
-                    <input cFormControl placeholder="Ghi chú..." type="text" />
-                  </div>
+                  <label cFormCheckLabel>{{ item.value.tenSanPham }}</label>
                 </c-form-check>
-              </c-col>
-            </c-row>
-          </ng-container>
+                <div class="d-flex gap-2">
+                  <input
+                    cFormControl
+                    placeholder="Nhập số lượng..."
+                    type="text"
+                    appOnlyNumber
+                    formControlName="soLuong"
+                    [disabled]="!item.value.isChecked"
+                  />
+                  <input
+                    cFormControl
+                    placeholder="Ghi chú..."
+                    type="text"
+                    formControlName="ghiChu"
+                  />
+                  <input
+                    cFormControl
+                    placeholder="Nhập ngày cần giao hàng"
+                    type="text"
+                    onfocus="(this.type = 'date')"
+                    id="date"
+                    formControlName="ngayCanGiaoHang"
+                  />
+                </div>
+              </div>
+            </c-col>
+          </fieldset>
         </ng-container>
 
         <c-col
@@ -99,7 +122,7 @@
             cButton
             type="submit"
             color="success"
-            (click)="exportToExcel()"
+            (click)="exportExcel()"
             shape="rounded-pill"
           >
             Download file

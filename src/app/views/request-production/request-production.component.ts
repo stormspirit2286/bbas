@@ -1,6 +1,12 @@
 import { ToastrService } from 'ngx-toastr';
-import { imgBase64, KhachHang, SanPham } from './../models/khachKhang';
-import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
+import { DonHang, imgBase64, KhachHang, SanPham } from './../models/khachKhang';
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  FormArray,
+  FormControl,
+} from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import * as fs from 'file-saver';
 
@@ -29,6 +35,7 @@ export class RequestProductionComponent implements OnInit {
   listProducts: SanPham[] = [];
   listProductsByCompany: SanPham[] = [];
   listProductsSelected: SanPham[] = [];
+  listDiaChiGiaoHang?: { address: string }[] = [];
 
   title = 'angular-export-to-excel';
 
@@ -87,6 +94,8 @@ export class RequestProductionComponent implements OnInit {
     },
   ];
 
+  dataToProduct: DonHang[] = [];
+
   constructor(private fb: FormBuilder, private toastr: ToastrService) {}
 
   ngOnInit() {
@@ -95,6 +104,7 @@ export class RequestProductionComponent implements OnInit {
       ngayYeuCau: [new Date(), Validators.required],
       soDonHang: ['', Validators.required],
       diaChiGiaoHang: ['', Validators.required],
+      danhSachSanPham: this.fb.array([]),
     });
 
     this.listCurrentCompany =
@@ -115,24 +125,67 @@ export class RequestProductionComponent implements OnInit {
         this.currentKhachHang = this.listCurrentCompany.find(
           (item) => item.maKhachHang === data
         );
-        console.log(this.currentKhachHang);
 
         this.listProductsByCompany = this.listProducts.filter(
           (item) => item.maKhachHang === data
         );
+        // this.listProductsByCompany.forEach((item) => {
+        //   return { ...item, isChecked: false };
+        // });
+        this.listDiaChiGiaoHang = this.currentKhachHang?.diaChiGiaoHang;
+        this.addDanhSachDH();
       });
   }
 
+  get danhSachSanPham(): FormArray {
+    return this.createProductForm.get('danhSachSanPham') as FormArray;
+  }
+
+  addDanhSachDH(): void {
+    this.listProductsByCompany.forEach((item) => {
+      this.danhSachSanPham.push(
+        this.fb.group({
+          isChecked: [false],
+          soLuong: [{ value: '', disabled: true }, Validators.required],
+          ngayCanGiaoHang: [{ value: '', disabled: true }, Validators.required],
+          ghiChu: [{ value: '', disabled: true }],
+          tenSanPham: item.tenSanPham,
+          maSanPham: item.maSanPham,
+        })
+      );
+    });
+  }
+
+  handleChange(event: any, data: any) {
+    const { soLuong, ngayCanGiaoHang, ghiChu } = data.controls;
+    event.target.checked
+      ? [soLuong, ngayCanGiaoHang, ghiChu].forEach((control) =>
+          control.enable()
+        )
+      : [soLuong, ngayCanGiaoHang, ghiChu].forEach((control) =>
+          control.disable()
+        );
+  }
+
   exportExcel() {
+    const dsSP = this.createProductForm.value.danhSachSanPham.filter(
+      (item: any) => item.isChecked
+    );
+
     const prepareDate = {
       soDonHang: this.createProductForm.value.soDonHang,
       maKhachHang: this.createProductForm.value.maKhachHang,
       tenKhachHang: this.currentKhachHang?.tenCongTy,
       diaChiKhachHang: this.currentKhachHang?.diaChiCongTy,
       diaChiGiaoHang: this.currentKhachHang?.diaChiGiaoHang,
-      dsSanPham: [],
+      ngayYeuCau: this.createProductForm.value.ngayYeuCau,
+      title: 'PHIẾU YÊU CẦU SẢN XUẤT',
+      dsSanPham: dsSP,
+      data: this.dataForExcel,
+      headers: Object.keys(this.empPerformance[0]),
     };
-    console.log(prepareDate);
+    // console.log(prepareDate);
+    this.exportExcelHello(prepareDate);
   }
 
   exportToExcel() {
@@ -140,27 +193,27 @@ export class RequestProductionComponent implements OnInit {
       this.dataForExcel.push(row);
     });
 
-    // let reportData = {
-    //   soDonHang: this.createProductForm.value.soDonHang,
-    //   maKhachHang: this.createProductForm.value.maKhachHang,
-    //   tenKhachHang: this.currentKhachHang?.tenCongTy,
-    //   diaChiKhachHang: this.currentKhachHang?.diaChiCongTy,
-    //   diaChiGiaoHang: this.currentKhachHang?.diaChiGiaoHang,
-    //   title: 'PHIẾU YÊU CẦU SẢN XUẤT',
-    //   data: this.dataForExcel,
-    //   headers: Object.keys(this.empPerformance[0]),
-    // };
     let reportData = {
-      soDonHang: 'DH0101010',
-      maKhachHang: 'MAKHASHCHANG ABC',
-      tenKhachHang: 'Công ty ABC DEF',
-      diaChiKhachHang: '360 Giải Phóng',
-      diaChiGiaoHang:
-        'Đường số 3, Cụm CN Xã Phú Thạnh, Xã Vĩnh Thanh, Huyện Nhơn Trạch, Tỉnh Đồng Nai Ms Nghĩa: 038 625 7686 ',
+      soDonHang: this.createProductForm.value.soDonHang,
+      maKhachHang: this.currentKhachHang?.maKhachHang,
+      tenKhachHang: this.currentKhachHang?.tenCongTy,
+      diaChiKhachHang: this.currentKhachHang?.diaChiCongTy,
+      diaChiGiaoHang: this.createProductForm.value.diaChiGiaoHang,
       title: 'PHIẾU YÊU CẦU SẢN XUẤT',
       data: this.dataForExcel,
       headers: Object.keys(this.empPerformance[0]),
     };
+    // let reportData = {
+    //   soDonHang: 'DH0101010',
+    //   maKhachHang: 'MAKHASHCHANG ABC',
+    //   tenKhachHang: 'Công ty ABC DEF',
+    //   diaChiKhachHang: '360 Giải Phóng',
+    //   diaChiGiaoHang:
+    //     'Đường số 3, Cụm CN Xã Phú Thạnh, Xã Vĩnh Thanh, Huyện Nhơn Trạch, Tỉnh Đồng Nai Ms Nghĩa: 038 625 7686 ',
+    //   title: 'PHIẾU YÊU CẦU SẢN XUẤT',
+    //   data: this.dataForExcel,
+    //   headers: Object.keys(this.empPerformance[0]),
+    // };
 
     this.exportExcelHello(reportData);
   }
@@ -234,7 +287,7 @@ export class RequestProductionComponent implements OnInit {
     // Ngày yêu cầu
     worksheet.mergeCells('A6:H6');
     let ngayYeuCau = worksheet.getCell('A6');
-    ngayYeuCau.value = `1. Ngày yêu cầu: ${excelData.soDonHang}`;
+    ngayYeuCau.value = `1. Ngày yêu cầu: ${excelData.ngayYeuCau}`;
     ngayYeuCau.font = {
       name: 'Times',
       size: 11,
@@ -254,7 +307,7 @@ export class RequestProductionComponent implements OnInit {
 
     worksheet.mergeCells('A8:H8');
     let diaChiCty = worksheet.getCell('A8');
-    diaChiCty.value = `3. Địa chỉ: ${excelData.tenKhachHang}`;
+    diaChiCty.value = `3. Địa chỉ: ${excelData.diaChiKhachHang}`;
     diaChiCty.font = {
       name: 'Times',
       size: 11,
@@ -276,7 +329,7 @@ export class RequestProductionComponent implements OnInit {
     // Số đơn hàng
     worksheet.mergeCells('A10:H10');
     let soDonHang = worksheet.getCell('A10');
-    soDonHang.value = `5. Số đơn hàng: ${excelData.maKhachHang}`;
+    soDonHang.value = `5. Số đơn hàng: ${excelData.soDonHang}`;
     soDonHang.font = {
       name: 'Times',
       size: 11,
@@ -288,6 +341,7 @@ export class RequestProductionComponent implements OnInit {
     let myLogoImage = workbook.addImage({
       base64: imgBase64,
       extension: 'png',
+      // ext: { width: 500, height: 200 }
     });
     worksheet.mergeCells('A1:B4');
     worksheet.addImage(myLogoImage, 'A1:B4');
@@ -445,7 +499,23 @@ export class RequestProductionComponent implements OnInit {
   resetForm() {
     this.createProductForm.reset();
     this.createProductForm.patchValue({
-      maCty: '',
+      diaChiGiaoHang: '',
     });
+    this.listProductsByCompany = [];
+    this.danhSachSanPham.clear();
+  }
+
+  // checkOrUncheck() {}
+
+  checkOrUncheck(item: SanPham) {
+    item.isChecked = !item.isChecked;
+    const index = this.dataToProduct.findIndex((data) => data?.id === item.id);
+    if (index !== -1) {
+      this.dataToProduct.splice(index, 1);
+    } else {
+      this.dataToProduct.push(item);
+    }
+
+    console.log(this.dataToProduct);
   }
 }
