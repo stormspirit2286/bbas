@@ -55,7 +55,7 @@
               <option value="" disabled selected>Chọn địa chỉ giao hàng</option>
               <option
                 *ngFor="let item of listDiaChiGiaoHang"
-                [value]="item?.address"
+                [ngValue]="item?.address"
               >
                 {{ item?.address }}
               </option>
@@ -124,6 +124,7 @@
             color="success"
             (click)="exportExcel()"
             shape="rounded-pill"
+            [disabled]="createProductForm.invalid"
           >
             Download file
           </button>

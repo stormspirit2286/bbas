@@ -1,6 +1,7 @@
 import { OnlyNumberDirective } from './views/directive/only-number.directive';
 import { NgModule } from '@angular/core';
 import {
+  DatePipe,
   HashLocationStrategy,
   LocationStrategy,
   PathLocationStrategy,
@@ -126,6 +127,7 @@ const APP_CONTAINERS = [
     },
     IconSetService,
     Title,
+    DatePipe,
   ],
   bootstrap: [AppComponent],
 })

@@ -1,27 +1,12 @@
 import { ToastrService } from 'ngx-toastr';
 import { DonHang, imgBase64, KhachHang, SanPham } from './../models/khachKhang';
-import {
-  FormGroup,
-  FormBuilder,
-  Validators,
-  FormArray,
-  FormControl,
-} from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import * as fs from 'file-saver';
 
 import * as Excel from 'exceljs';
 import { debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
-export interface ROW_ITEM {
-  ID: number;
-  NAME: string;
-  DEPARTMENT: string;
-  MONTH: string;
-  YEAR: number;
-  SALES: number;
-  CHANGE: number;
-  LEADS: number;
-}
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-request-production',
@@ -36,67 +21,13 @@ export class RequestProductionComponent implements OnInit {
   listProductsByCompany: SanPham[] = [];
   listProductsSelected: SanPham[] = [];
   listDiaChiGiaoHang?: { address: string }[] = [];
-
-  title = 'angular-export-to-excel';
-
-  dataForExcel: ROW_ITEM[] = [];
-
-  empPerformance = [
-    {
-      ID: 10011,
-      NAME: 'A',
-      DEPARTMENT: 'Sales',
-      MONTH: 'Jan',
-      YEAR: 2022,
-      SALES: 132412,
-      CHANGE: 12,
-      LEADS: 35,
-    },
-    {
-      ID: 10012,
-      NAME: 'A',
-      DEPARTMENT: 'Sales',
-      MONTH: 'Feb',
-      YEAR: 2022,
-      SALES: 232324,
-      CHANGE: 2,
-      LEADS: 443,
-    },
-    {
-      ID: 10013,
-      NAME: 'A',
-      DEPARTMENT: 'Sales',
-      MONTH: 'Mar',
-      YEAR: 2022,
-      SALES: 542234,
-      CHANGE: 45,
-      LEADS: 345,
-    },
-    {
-      ID: 10014,
-      NAME: 'A',
-      DEPARTMENT: 'Sales',
-      MONTH: 'Apr',
-      YEAR: 2022,
-      SALES: 223335,
-      CHANGE: 32,
-      LEADS: 234,
-    },
-    {
-      ID: 10015,
-      NAME: 'A',
-      DEPARTMENT: 'Sales',
-      MONTH: 'May',
-      YEAR: 2022,
-      SALES: 455535,
-      CHANGE: 21,
-      LEADS: 12,
-    },
-  ];
-
   dataToProduct: DonHang[] = [];
 
-  constructor(private fb: FormBuilder, private toastr: ToastrService) {}
+  constructor(
+    private fb: FormBuilder,
+    private toastr: ToastrService,
+    private datePipe: DatePipe
+  ) {}
 
   ngOnInit() {
     this.createProductForm = this.fb.group({
@@ -125,13 +56,10 @@ export class RequestProductionComponent implements OnInit {
         this.currentKhachHang = this.listCurrentCompany.find(
           (item) => item.maKhachHang === data
         );
-
         this.listProductsByCompany = this.listProducts.filter(
           (item) => item.maKhachHang === data
         );
-        // this.listProductsByCompany.forEach((item) => {
-        //   return { ...item, isChecked: false };
-        // });
+        this.listDiaChiGiaoHang = [];
         this.listDiaChiGiaoHang = this.currentKhachHang?.diaChiGiaoHang;
         this.addDanhSachDH();
       });
@@ -151,6 +79,8 @@ export class RequestProductionComponent implements OnInit {
           ghiChu: [{ value: '', disabled: true }],
           tenSanPham: item.tenSanPham,
           maSanPham: item.maSanPham,
+          donViTinh: item.donViTinh,
+          chiTietKyThuat: item.chiTietKyThuat,
         })
       );
     });
@@ -172,62 +102,47 @@ export class RequestProductionComponent implements OnInit {
       (item: any) => item.isChecked
     );
 
-    const prepareDate = {
+    const prepareData = {
       soDonHang: this.createProductForm.value.soDonHang,
       maKhachHang: this.createProductForm.value.maKhachHang,
       tenKhachHang: this.currentKhachHang?.tenCongTy,
       diaChiKhachHang: this.currentKhachHang?.diaChiCongTy,
-      diaChiGiaoHang: this.currentKhachHang?.diaChiGiaoHang,
-      ngayYeuCau: this.createProductForm.value.ngayYeuCau,
-      title: 'PHIẾU YÊU CẦU SẢN XUẤT',
-      dsSanPham: dsSP,
-      data: this.dataForExcel,
-      headers: Object.keys(this.empPerformance[0]),
-    };
-    // console.log(prepareDate);
-    this.exportExcelHello(prepareDate);
-  }
-
-  exportToExcel() {
-    this.empPerformance.forEach((row) => {
-      this.dataForExcel.push(row);
-    });
-
-    let reportData = {
-      soDonHang: this.createProductForm.value.soDonHang,
-      maKhachHang: this.currentKhachHang?.maKhachHang,
-      tenKhachHang: this.currentKhachHang?.tenCongTy,
-      diaChiKhachHang: this.currentKhachHang?.diaChiCongTy,
       diaChiGiaoHang: this.createProductForm.value.diaChiGiaoHang,
+      ngayYeuCau: this.datePipe.transform(
+        this.createProductForm.value.ngayYeuCau,
+        'dd/MM/yyyy'
+      ),
       title: 'PHIẾU YÊU CẦU SẢN XUẤT',
-      data: this.dataForExcel,
-      headers: Object.keys(this.empPerformance[0]),
+      dsSanPham: dsSP.map((item: any, index: number) => {
+        delete item.isChecked;
+        item.STT = index + 1;
+        item.ngayCanGiaoHang = this.datePipe.transform(
+          item.ngayCanGiaoHang,
+          'dd/MM/yyyy'
+        );
+        return item;
+      }),
+      // data: this.dataForExcel,
+      headers: [
+        'STT',
+        'Mã sản phẩm',
+        'Tên sản phẩm',
+        'Chi tiết kỹ thuật',
+        'ĐVT',
+        'Số lượng',
+        'Ngày cần\ngiao hàng',
+        'Ghi chú',
+      ],
     };
-    // let reportData = {
-    //   soDonHang: 'DH0101010',
-    //   maKhachHang: 'MAKHASHCHANG ABC',
-    //   tenKhachHang: 'Công ty ABC DEF',
-    //   diaChiKhachHang: '360 Giải Phóng',
-    //   diaChiGiaoHang:
-    //     'Đường số 3, Cụm CN Xã Phú Thạnh, Xã Vĩnh Thanh, Huyện Nhơn Trạch, Tỉnh Đồng Nai Ms Nghĩa: 038 625 7686 ',
-    //   title: 'PHIẾU YÊU CẦU SẢN XUẤT',
-    //   data: this.dataForExcel,
-    //   headers: Object.keys(this.empPerformance[0]),
-    // };
-
-    this.exportExcelHello(reportData);
+    // console.log(prepareData);
+    this.exportToExcel(prepareData);
   }
 
-  exportExcelHello(excelData: any) {
-    //Title, Header & Data
-    const title = excelData.title;
-    const header = excelData.headers;
-    const data = excelData.data;
-
+  exportToExcel(excelData: any) {
+    const { title, headers, dsSanPham } = excelData;
     //Create a workbook with a worksheet
     let workbook = new Excel.Workbook();
     let worksheet = workbook.addWorksheet('BBAS');
-    // worksheet.getColumn('A').width = 10;
 
     //Add Row and formatting
     worksheet.mergeCells('C1', 'E4');
@@ -241,6 +156,12 @@ export class RequestProductionComponent implements OnInit {
       color: { argb: 'black' },
     };
     titleRow.alignment = { vertical: 'middle', horizontal: 'center' };
+    titleRow.border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
 
     // Mã số
     worksheet.mergeCells('F1:H1');
@@ -252,6 +173,12 @@ export class RequestProductionComponent implements OnInit {
       bold: true,
     };
     maSo.alignment = { vertical: 'middle', horizontal: 'left' };
+    maSo.border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
     // Ngày ban hành
     worksheet.mergeCells('F2:H2');
     let ngAyBanHanh = worksheet.getCell('F2');
@@ -262,6 +189,12 @@ export class RequestProductionComponent implements OnInit {
       bold: true,
     };
     ngAyBanHanh.alignment = { vertical: 'middle', horizontal: 'left' };
+    ngAyBanHanh.border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
     // Lần ban hành
     worksheet.mergeCells('F3:H3');
     let lanBanHanh = worksheet.getCell('F3');
@@ -272,6 +205,12 @@ export class RequestProductionComponent implements OnInit {
       bold: true,
     };
     lanBanHanh.alignment = { vertical: 'middle', horizontal: 'left' };
+    lanBanHanh.border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
 
     // Số trang
     worksheet.mergeCells('F4:H4');
@@ -283,6 +222,12 @@ export class RequestProductionComponent implements OnInit {
       bold: true,
     };
     soTrang.alignment = { vertical: 'middle', horizontal: 'left' };
+    soTrang.border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
 
     // Ngày yêu cầu
     worksheet.mergeCells('A6:H6');
@@ -338,54 +283,42 @@ export class RequestProductionComponent implements OnInit {
     soDonHang.alignment = { vertical: 'middle', horizontal: 'left' };
 
     //Add Image
-    let myLogoImage = workbook.addImage({
+    const myLogoImage = workbook.addImage({
       base64: imgBase64,
       extension: 'png',
-      // ext: { width: 500, height: 200 }
     });
+
     worksheet.mergeCells('A1:B4');
     worksheet.addImage(myLogoImage, 'A1:B4');
+
+    const imageCell = worksheet.getCell('A1');
+    // Thiết lập kiểu viền cho ô đó
+    imageCell.border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    imageCell.alignment = { wrapText: true };
+
+    const diaChiRow = worksheet.getRow(8);
+    diaChiRow.height = 15;
 
     //Blank Row
     worksheet.addRow([]);
 
-    //Adding Header Row
-    // let headerRow = worksheet.addRow(header);
-    // headerRow.eachCell((cell, number) => {
-    //   cell.fill = {
-    //     type: 'pattern',
-    //     pattern: 'solid',
-    //     fgColor: { argb: '4167B8' },
-    //     bgColor: { argb: '' },
-    //   };
-    //   cell.font = {
-    //     bold: true,
-    //     color: { argb: 'FFFFFF' },
-    //     size: 12,
-    //   };
-    // });
-
-    const headers = [
-      'STT',
-      'Mã sản phẩm',
-      'Tên sản phẩm',
-      'Chi tiết kỹ thuật',
-      'ĐVT',
-      'Số lượng',
-      'Ngày cần\ngiao hàng',
-      'Ghi chú',
-    ];
     const headerRowS = worksheet.addRow(headers);
     headerRowS.eachCell((cell, colNumber) => {
-      // cell.fill = {
-      //   type: 'pattern',
-      //   pattern: 'solid',
-      //   fgColor: { argb: 'CCCCCC' },
-      // };
       cell.font = {
         name: 'Times',
         size: 11,
         bold: true,
+      };
+      cell.border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' },
       };
     });
     const rowHeaderTable = worksheet.getRow(12);
@@ -400,92 +333,73 @@ export class RequestProductionComponent implements OnInit {
       horizontal: 'center',
       wrapText: true,
     };
-    const products = [
-      {
-        STT: 1,
-        TenSanPham: 'Sản phẩm A',
-        MaSanPham: 'A001',
-        ChiTiet: 'Chi tiết sản phẩm A',
-        SoLuong: 10,
-        GhiChu: '',
-      },
-      {
-        STT: 2,
-        TenSanPham: 'Sản phẩm B',
-        MaSanPham: 'B001',
-        ChiTiet: 'Chi tiết sản phẩm B',
-        SoLuong: 20,
-        GhiChu: '',
-      },
-      {
-        STT: 3,
-        TenSanPham: 'Sản phẩm C',
-        MaSanPham: 'C001',
-        ChiTiet: 'Chi tiết sản phẩm C',
-        SoLuong: 30,
-        GhiChu: '',
-      },
-    ];
 
-    products.forEach((product, index) => {
+    const columnSTT = worksheet.getColumn('A');
+    columnSTT.width = 5;
+    const columnMaSP = worksheet.getColumn('B');
+    columnMaSP.width = 20;
+    const columnTenSP = worksheet.getColumn('C');
+    columnTenSP.width = 22;
+    const chiTietKT = worksheet.getColumn('D');
+    chiTietKT.width = 50;
+    const DVT = worksheet.getColumn('E');
+    DVT.width = 7;
+    const soLuong = worksheet.getColumn('F');
+    soLuong.width = 11;
+    const ngayGiaoHang = worksheet.getColumn('G');
+    ngayGiaoHang.width = 12;
+    const ghiChu = worksheet.getColumn('H');
+    ghiChu.width = 12;
+
+    dsSanPham.forEach((product: any, index: number) => {
       const rowData = [
         product.STT,
-        product.TenSanPham,
-        product.MaSanPham,
-        product.ChiTiet,
-        product.SoLuong,
-        product.GhiChu,
+        product.maSanPham,
+        product.tenSanPham,
+        product.chiTietKyThuat,
+        product.donViTinh,
+        product.soLuong,
+        product.ngayCanGiaoHang,
+        product.ghiChu,
       ];
-
-      worksheet.addRow(rowData);
+      const newRow = worksheet.addRow(rowData);
+      newRow.eachCell((cell, colNumber) => {
+        cell.border = {
+          top: { style: 'thin' },
+          left: { style: 'thin' },
+          bottom: { style: 'thin' },
+          right: { style: 'thin' },
+        };
+        cell.alignment = {
+          vertical: 'middle',
+          horizontal: 'center',
+          wrapText: true,
+        };
+      });
     });
 
     // Định dạng lại các cột trong bảng
-    worksheet.columns.forEach((column) => {
-      column.width = 15;
-    });
-
-    // Adding Data with Conditional Formatting
-    // data.forEach((d: any) => {
-    //   let row = worksheet.addRow(Object.values(d));
-
-    //   let sales = row.getCell(6);
-    //   let color = 'FF99FF99';
-    //   let sales_val = sales.value || 0;
-    //   // Conditional fill color
-    //   if (sales_val < 200000) {
-    //     color = 'FF9999';
-    //   }
-
-    //   sales.fill = {
-    //     type: 'pattern',
-    //     pattern: 'solid',
-    //     fgColor: { argb: color },
-    //   };
-    // });
-
-    // worksheet.getColumn(3).width = 20;
-    // worksheet.addRow([]);
+    worksheet.columns.forEach((column: any) => {});
 
     //Footer Row
-    let footerRow = worksheet.addRow([
+    const footerRow = worksheet.addRow([
       `Địa chỉ giao hàng: ${excelData.diaChiGiaoHang}`,
     ]);
-    // footerRow.getCell(1).fill = {
-    //   type: 'pattern',
-    //   pattern: 'solid',
-    //   // fgColor: { argb: 'FFFFFF' },
-    // };
     footerRow.font = {
       name: 'Times',
       size: 11,
       bold: true,
       italic: true,
     };
-    footerRow.alignment = { vertical: 'middle', horizontal: 'left' };
+    footerRow.alignment = {
+      vertical: 'middle',
+      horizontal: 'center',
+      wrapText: true,
+    };
+    footerRow.height = 18;
 
     //Merge Cells
-    worksheet.mergeCells(`A${footerRow.number}:F${footerRow.number}`);
+    worksheet.mergeCells(`A${footerRow.number}:H${footerRow.number}`);
 
     //Generate & Save Excel File
     workbook.xlsx.writeBuffer().then((data) => {
@@ -505,8 +419,6 @@ export class RequestProductionComponent implements OnInit {
     this.danhSachSanPham.clear();
   }
 
-  // checkOrUncheck() {}
-
   checkOrUncheck(item: SanPham) {
     item.isChecked = !item.isChecked;
     const index = this.dataToProduct.findIndex((data) => data?.id === item.id);
@@ -515,7 +427,5 @@ export class RequestProductionComponent implements OnInit {
     } else {
       this.dataToProduct.push(item);
     }
-
-    console.log(this.dataToProduct);
   }
 }
