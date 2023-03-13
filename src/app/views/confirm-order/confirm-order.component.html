@@ -129,6 +129,49 @@
             </select>
           </c-col>
         </c-row>
+
+        <ng-container
+          formArrayName="danhSachSanPham"
+          *ngIf="listProductsByCompany.length"
+        >
+          <fieldset class="row mt-4">
+            <legend cLabel="col" cCol [sm]="2" class="pt-0">
+              Lựa chọn sản phẩm
+            </legend>
+            <c-col [sm]="10">
+              <div
+                *ngFor="let item of danhSachSanPham.controls; let id = index"
+                [formGroupName]="id"
+                class="d-flex gap-2 mt-2"
+              >
+                <c-col [sm]="4">
+                  <c-form-check class="mt-2">
+                    <input
+                      cFormCheckInput
+                      type="checkbox"
+                      id="{{ item.value.tenSanPham }}"
+                      formControlName="isChecked"
+                      (change)="handleChange($event, item)"
+                    />
+                    <label cFormCheckLabel for="{{ item.value.tenSanPham }}">{{
+                      item.value.tenSanPham
+                    }}</label>
+                  </c-form-check>
+                </c-col>
+                <c-col [sm]="4">
+                  <input
+                    cFormControl
+                    placeholder="Nhập số lượng..."
+                    type="text"
+                    appOnlyNumber
+                    formControlName="soLuong"
+                    [disabled]="!item.value.isChecked"
+                  />
+                </c-col>
+              </div>
+            </c-col>
+          </fieldset>
+        </ng-container>
         <c-col
           [xs]="12"
           class="text-center d-flex justify-content-center gap-2"

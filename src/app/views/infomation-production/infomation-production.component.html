@@ -46,15 +46,13 @@
             </button>
           </c-col>
         </form>
-        <table [striped]="true" cTable>
-          <thead>
+        <table cTable>
+          <thead cTableColor="light">
             <tr>
               <th scope="col">#</th>
               <th scope="col" class="text-center" style="width: 20%">Tên SP</th>
               <th scope="col" class="text-center">Mã SP</th>
-              <th scope="col" class="text-center" style="width: 40%">
-                Chi tiết KT
-              </th>
+              <th scope="col" class="text-center">Giá SP</th>
               <th scope="col">ĐVT</th>
               <th scope="col" class="text-center">##</th>
             </tr>
@@ -66,10 +64,12 @@
               <tr
                 *ngFor="let item of listCurrentProductByCompany; let id = index"
               >
-                <th scope="row">{{ id + 1 }}</th>
+                <td>{{ id + 1 }}</td>
                 <td class="text-center">{{ item?.tenSanPham }}</td>
                 <td class="text-center">{{ item?.maSanPham }}</td>
-                <td class="text-center">{{ item?.chiTietKyThuat }}</td>
+                <td class="text-center">
+                  {{ item?.giaSanPham || 0 | currency : "VND" : true }}
+                </td>
                 <td>{{ item?.donViTinh }}</td>
                 <td
                   class="d-flex justify-content-center alige-items-center gap-2"
@@ -84,7 +84,7 @@
                       Xem
                     </button>
                   </div>
-                  <div class="ml-2">
+                  <div>
                     <button
                       cButton
                       color="warning"
@@ -150,6 +150,21 @@
                 placeholder="Nhập mã SP..."
                 autocomplete="off"
               />
+            </c-col>
+          </c-row>
+          <c-row class="mt-4">
+            <label cLabel="col" class="col-sm-2" for="price"> Giá SP </label>
+            <c-col [xs]="10" [md]="6" [lg]="4">
+              <c-input-group>
+                <input
+                  cFormControl
+                  formControlName="giaSanPham"
+                  autocomplete="off"
+                  appCurrencyFormat
+                  placeholder="Nhập giá SP..."
+                />
+                <span cInputGroupText>VND</span>
+              </c-input-group>
             </c-col>
           </c-row>
 

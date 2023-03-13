@@ -22,6 +22,7 @@ export interface SanPham {
   chiTietKyThuat: string;
   donViTinh: string;
   isChecked?: boolean;
+  giaSanPham?: number;
 }
 
 export interface DonHang {

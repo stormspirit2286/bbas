@@ -46,6 +46,7 @@ export class InfomationCompanyComponent implements OnInit {
 
   addNewCompany() {
     this.isShowListCompany = false;
+    this.isCreateNewCompany = true;
   }
 
   addNewMoreAddress() {
@@ -63,24 +64,47 @@ export class InfomationCompanyComponent implements OnInit {
 
   submitForm() {
     if (this.companyForm.invalid) return;
-    const data = { ...this.companyForm.value };
-    data.daiDienCongTy = {
-      hoTenViDaiDien: this.companyForm.value.hoTenViDaiDien,
-      chucVu: this.companyForm.value.chucVu,
-      gioiTinhViDaiDien: this.companyForm.value.gioiTinhViDaiDien,
+    const { chucVu, hoTenViDaiDien, gioiTinhViDaiDien, ...data } =
+      this.companyForm.value;
+    const daiDienCongTy = {
+      hoTenViDaiDien,
+      chucVu,
+      gioiTinhViDaiDien,
     };
-    delete data.chucVu;
-    delete data.hoTenViDaiDien;
-    delete data.gioiTinhViDaiDien;
+    // const tempCompany = this.isCreateNewCompany
+    //   ? { ...data, daiDienCongTy, id: this.listCurrentCompany.length + 1 }
+    //   : { ...data, daiDienCongTy, id: this.currentCompany?.id };
+
+    // const index = this.listCurrentCompany.findIndex(
+    //   (item) => item.id === tempCompany.id
+    // );
+    // if (index === -1) {
+    //   // create a new company
+    //   this.listCurrentCompany.push(tempCompany);
+    // } else {
+    //   // replace that company
+    //   this.listCurrentCompany.splice(index, 1, tempCompany);
+    // }
+
+    // localStorage.setItem(
+    //   'DanhSachCongTy',
+    //   JSON.stringify(this.listCurrentCompany)
+    // );
+    // this.toastr.success(
+    //   this.isCreateNewCompany
+    //     ? 'Tạo mới thành công !!!'
+    //     : 'Cập nhật thành công !!!'
+    // );
+    // this.companyForm.reset();
 
     let tempCompany;
     if (this.isCreateNewCompany) {
       tempCompany = {
         ...data,
+        daiDienCongTy,
         id: this.listCurrentCompany.length + 1,
       };
       this.listCurrentCompany.push(tempCompany);
-      this.toastr.success('Tạo mới thành công !!!');
     } else {
       const index = this.listCurrentCompany.findIndex(
         (item) => item.id === this.currentCompany?.id
@@ -88,14 +112,19 @@ export class InfomationCompanyComponent implements OnInit {
       if (index === -1) return;
       tempCompany = {
         ...data,
+        daiDienCongTy,
         id: this.currentCompany?.id,
       };
       this.listCurrentCompany.splice(index, 1, tempCompany);
-      this.toastr.success('Cập nhật thành công !!!');
     }
     localStorage.setItem(
       'DanhSachCongTy',
       JSON.stringify(this.listCurrentCompany)
+    );
+    this.toastr.success(
+      this.isCreateNewCompany
+        ? 'Tạo mới thành công !!!'
+        : 'Cập nhật thành công !!!'
     );
     this.companyForm.reset();
   }
@@ -143,17 +172,14 @@ export class InfomationCompanyComponent implements OnInit {
   }
 
   showCurrentCompany(data: KhachHang) {
+    const { daiDienCongTy, ...formData } = data;
+    const { gioiTinhViDaiDien, hoTenViDaiDien, chucVu } = daiDienCongTy || {};
     this.currentCompany = data;
     this.companyForm.patchValue({
-      tenCongTy: data.tenCongTy,
-      maKhachHang: data.maKhachHang,
-      diaChiCongTy: data.diaChiCongTy,
-      diaChiGiaoHang: data.diaChiGiaoHang,
-      tenThuongGoi: data.tenThuongGoi,
-      gioiTinhViDaiDien: data?.daiDienCongTy?.gioiTinhViDaiDien,
-      hoTenViDaiDien: data?.daiDienCongTy?.hoTenViDaiDien,
-      chucVu: data?.daiDienCongTy?.chucVu,
-      dienThoai: data?.dienThoai,
+      ...formData,
+      gioiTinhViDaiDien: gioiTinhViDaiDien || '',
+      hoTenViDaiDien: hoTenViDaiDien || '',
+      chucVu: chucVu || '',
     });
     this.isCreateNewCompany = false;
     this.isShowListCompany = false;

@@ -47,6 +47,8 @@ export class ConfirmOrderComponent implements OnInit {
 
     this.listCurrentCompany =
       JSON.parse(localStorage.getItem('DanhSachCongTy') || '[]') || [];
+    this.listProducts =
+      JSON.parse(localStorage.getItem('DanhSachSanPham') || '[]') || [];
 
     this.orderForm
       .get('maKhachHang')
@@ -58,12 +60,16 @@ export class ConfirmOrderComponent implements OnInit {
         })
       )
       .subscribe((data) => {
+        console.log(data);
+
         this.currentKhachHang = this.listCurrentCompany.find(
           (item) => item.maKhachHang === data
         );
         this.listProductsByCompany = this.listProducts.filter(
           (item) => item.maKhachHang === data
         );
+        console.log(' this.listProductsByCompany', this.listProductsByCompany);
+
         this.listDiaChiGiaoHang = [];
         this.listDiaChiGiaoHang = this.currentKhachHang?.diaChiGiaoHang;
         this.addDanhSachDH();
@@ -80,12 +86,11 @@ export class ConfirmOrderComponent implements OnInit {
         this.fb.group({
           isChecked: [false],
           soLuong: [{ value: '', disabled: true }, Validators.required],
-          ngayCanGiaoHang: [{ value: '', disabled: true }, Validators.required],
-          ghiChu: [{ value: '', disabled: true }],
           tenSanPham: item.tenSanPham,
           maSanPham: item.maSanPham,
           donViTinh: item.donViTinh,
           chiTietKyThuat: item.chiTietKyThuat,
+          giaSanPham: item.giaSanPham,
         })
       );
     });
@@ -101,6 +106,13 @@ export class ConfirmOrderComponent implements OnInit {
 
   addMoreAddress() {
     this.idAddMoreAddress = !this.idAddMoreAddress;
+  }
+
+  handleChange(event: any, data: any) {
+    const { soLuong } = data.controls;
+    event.target.checked
+      ? [soLuong].forEach((control) => control.enable())
+      : [soLuong].forEach((control) => control.disable());
   }
 
   onSaveAddress() {

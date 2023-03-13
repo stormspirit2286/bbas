@@ -1,4 +1,6 @@
+import { CustomCurrencyPipe } from './views/pipe/currentcy.pipe';
 import { OnlyNumberDirective } from './views/directive/only-number.directive';
+import { CurrencyFormatDirective } from './views/directive/currentcy-formatting.directive';
 import { NgModule } from '@angular/core';
 import {
   DatePipe,
@@ -82,6 +84,8 @@ const APP_CONTAINERS = [
     InfomationCompanyComponent,
     InfomationProductionComponent,
     OnlyNumberDirective,
+    CurrencyFormatDirective,
+    CustomCurrencyPipe,
   ],
   imports: [
     BrowserModule,

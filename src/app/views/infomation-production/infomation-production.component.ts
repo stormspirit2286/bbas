@@ -1,8 +1,10 @@
 import { ToastrService } from 'ngx-toastr';
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { KhachHang, SanPham } from '../models/khachKhang';
 import { LIST_DON_VI_TINH } from '../models/khachKhang';
+import { debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
+// import { CurrencyFormattingDirective } from '../directive/currentcy-formatting.directive';
 
 @Component({
   selector: 'app-infomation-production',
@@ -15,11 +17,16 @@ export class InfomationProductionComponent implements OnInit {
   isCreateNewProduct = true;
   companyForm!: FormGroup;
   addNewProductForm!: FormGroup;
+  currentKhachHang?: KhachHang;
   listCurrentCompany: KhachHang[] = [];
   listCurrentProduct: SanPham[] = [];
   listCurrentProductByCompany: SanPham[] = [];
+  listProducts: SanPham[] = [];
   currentProductId = '';
   LIST_DON_VI_TINH = LIST_DON_VI_TINH;
+  listProductsByCompany: SanPham[] = [];
+  listDiaChiGiaoHang?: { address: string }[] = [];
+
   constructor(private fb: FormBuilder, private toastr: ToastrService) {}
 
   ngOnInit(): void {
@@ -33,9 +40,55 @@ export class InfomationProductionComponent implements OnInit {
       tenSanPham: ['', Validators.required],
       chiTietKyThuat: ['', Validators.required],
       donViTinh: ['', Validators.required],
+      giaSanPham: ['', Validators.required],
+      danhSachSanPham: this.fb.array([]),
     });
     this.listCurrentCompany =
       JSON.parse(localStorage.getItem('DanhSachCongTy') || '[]') || [];
+
+    this.listProducts =
+      JSON.parse(localStorage.getItem('DanhSachSanPham') || '[]') || [];
+    this.addNewProductForm
+      .get('maKhachHang')
+      ?.valueChanges.pipe(
+        debounceTime(100), // giới hạn thời gian giữa các lần gửi yêu cầu
+        distinctUntilChanged(), // chỉ gửi yêu cầu nếu giá trị khác so với lần gửi trước đó
+        switchMap((value) => {
+          return of(value);
+        })
+      )
+      .subscribe((data) => {
+        this.currentKhachHang = this.listCurrentCompany.find(
+          (item) => item.maKhachHang === data
+        );
+        this.listProductsByCompany = this.listProducts.filter(
+          (item) => item.maKhachHang === data
+        );
+        this.listDiaChiGiaoHang = [];
+        this.listDiaChiGiaoHang = this.currentKhachHang?.diaChiGiaoHang;
+        this.addDanhSachDH();
+      });
+  }
+
+  get danhSachSanPham(): FormArray {
+    return this.addNewProductForm.get('danhSachSanPham') as FormArray;
+  }
+
+  addDanhSachDH(): void {
+    this.listProductsByCompany.forEach((item) => {
+      this.danhSachSanPham.push(
+        this.fb.group({
+          isChecked: [false],
+          soLuong: [{ value: '', disabled: true }, Validators.required],
+          ngayCanGiaoHang: [{ value: '', disabled: true }, Validators.required],
+          ghiChu: [{ value: '', disabled: true }],
+          tenSanPham: item.tenSanPham,
+          maSanPham: item.maSanPham,
+          donViTinh: item.donViTinh,
+          chiTietKyThuat: item.chiTietKyThuat,
+        })
+      );
+    });
   }
 
   addMore() {
@@ -85,6 +138,7 @@ export class InfomationProductionComponent implements OnInit {
       tenSanPham: data.tenSanPham,
       chiTietKyThuat: data.chiTietKyThuat,
       donViTinh: data.donViTinh,
+      giaSanPham: data?.giaSanPham,
     });
   }
 
