@@ -1,6 +1,158 @@
 <div class="fade-in">
   <c-card class="mb-4">
     <c-card-header> Xác Nhận Đơn Hàng </c-card-header>
-    <c-card-body> </c-card-body>
+    <c-card-body>
+      <form [formGroup]="orderForm" class="row g-3">
+        <c-row class="mt-4">
+          <label cLabel="col" class="col-sm-2" for="maKhachHang">
+            Chọn khách hàng
+          </label>
+          <c-col [sm]="10">
+            <ng-select [searchable]="true" formControlName="maKhachHang">
+              <ng-option
+                *ngFor="let item of listCurrentCompany"
+                [value]="item.maKhachHang"
+              >
+                {{ item.tenCongTy }}
+              </ng-option>
+            </ng-select>
+          </c-col>
+        </c-row>
+        <c-row class="mt-4">
+          <label cLabel="col" class="col-sm-2" for="ngayYeuCau">
+            Ngày xác nhận đơn
+          </label>
+          <c-col [sm]="10">
+            <c-col lg="5">
+              <input
+                cFormControl
+                id="ngayYeuCau"
+                formControlName="ngayYeuCau"
+                type="date"
+              />
+            </c-col>
+          </c-col>
+        </c-row>
+        <c-row class="mt-4">
+          <label cLabel="col" class="col-sm-2"> Địa chỉ giao hàng </label>
+          <c-col [sm]="10">
+            <div class="d-flex gap-2">
+              <select
+                aria-label="Default select example"
+                cSelect
+                formControlName="diaChiGiaoHang"
+              >
+                <option value="" disabled selected>
+                  Chọn địa chỉ giao hàng
+                </option>
+                <option
+                  *ngFor="let item of listDiaChiGiaoHang"
+                  [ngValue]="item?.address"
+                >
+                  {{ item?.address }}
+                </option>
+              </select>
+              <button
+                [disabled]="!currentKhachHang?.maKhachHang"
+                cButton
+                color="info"
+                (click)="addMoreAddress()"
+              >
+                <svg
+                  [cIcon]="
+                    this.idAddMoreAddress ? icons.cilMinus : icons.cilPlus
+                  "
+                  size="lg"
+                  title="List Icon"
+                ></svg>
+              </button>
+            </div>
+
+            <c-row class="mt-2" *ngIf="idAddMoreAddress">
+              <c-col [md]="10">
+                <input
+                  cFormControl
+                  placeholder="Nhập địa chỉ giao hàng mới ..."
+                  type="text"
+                  #fondovalor
+                />
+              </c-col>
+              <c-col [md]="1" class="pr-5">
+                <button cButton color="success" (click)="onSaveAddress()">
+                  Save
+                </button>
+              </c-col>
+            </c-row>
+          </c-col>
+        </c-row>
+        <c-row class="mt-4">
+          <label cLabel="col" class="col-sm-2" for="thoiGianGiaoHang">
+            Thời gian giao hàng
+          </label>
+          <c-col [sm]="10">
+            <select
+              aria-label="Default select"
+              cSelect
+              formControlName="thoiGianGiaoHang"
+            >
+              <option value="" disabled selected>
+                Chọn thời gian giao hàng
+              </option>
+              <option
+                *ngFor="let item of listThoiGianGiaoHang"
+                [ngValue]="item"
+              >
+                {{ item }}
+              </option>
+            </select>
+          </c-col>
+        </c-row>
+        <c-row class="mt-4">
+          <label cLabel="col" class="col-sm-2" for="hinhThucThanhToan">
+            Hình thức thanh toán
+          </label>
+          <c-col [sm]="10">
+            <select
+              aria-label="Default select"
+              cSelect
+              formControlName="hinhThucThanhToan"
+            >
+              <option value="" disabled selected>
+                Chọn hình thức thanh toán
+              </option>
+              <option
+                *ngFor="let item of listHinhThucThanhToan"
+                [ngValue]="item"
+              >
+                {{ item }}
+              </option>
+            </select>
+          </c-col>
+        </c-row>
+        <c-col
+          [xs]="12"
+          class="text-center d-flex justify-content-center gap-2"
+        >
+          <button
+            cButton
+            type="submit"
+            color="success"
+            (click)="exportExcel()"
+            shape="rounded-pill"
+            [disabled]="orderForm.invalid"
+          >
+            Download file
+          </button>
+          <button
+            cButton
+            color="secondary"
+            shape="rounded-pill"
+            (click)="resetForm()"
+          >
+            Làm mới
+          </button>
+        </c-col>
+      </form>
+    </c-card-body>
   </c-card>
 </div>

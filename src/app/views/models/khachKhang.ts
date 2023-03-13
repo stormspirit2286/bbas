@@ -5,6 +5,13 @@ export interface KhachHang {
   diaChiCongTy: string;
   tenThuongGoi: string;
   diaChiGiaoHang: { address: string }[];
+
+  daiDienCongTy: {
+    hoTenViDaiDien?: string;
+    chucVu?: string;
+    gioiTinhViDaiDien?: string;
+  };
+  dienThoai?: string;
 }
 
 export interface SanPham {
@@ -33,6 +40,20 @@ export const GHI_CHU = [
   'Khách hàng cũ, mã cũ',
   'khách hàng cũ, mã mới',
   'Khách hàng cũ, mã cũ, sửa thiết kế',
+];
+
+export const THOI_GIAN_GIAO_HANG = [
+  '10 - 15 ngày',
+  '15 - 20 ngày',
+  '20 - 25 ngày',
+  '25 - 30 ngày',
+];
+
+export const HINH_THUC_THANH_TOAN = [
+  'Tạm ứng tiền bao bì',
+  '100% tiền trục in/bản in',
+  'Tương ứng số tiền là',
+  'Số tiền còn lại thanh toán dựa theo đối chiếu thu thực tế ngay khi nhận được hàng hóa hoặc là theo công nợ trong hợp đồng',
 ];
 
 export const LIST_DON_VI_TINH = ['Cái', 'Kg'];

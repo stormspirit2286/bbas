@@ -26,6 +26,10 @@ export class InfomationCompanyComponent implements OnInit {
       maKhachHang: ['', Validators.required],
       diaChiCongTy: ['', Validators.required],
       tenThuongGoi: ['', Validators.required],
+      gioiTinhViDaiDien: [''],
+      hoTenViDaiDien: [''],
+      chucVu: [''],
+      dienThoai: [''],
       diaChiGiaoHang: this.fb.array([
         this.fb.group({
           address: ['', Validators.required],
@@ -35,8 +39,6 @@ export class InfomationCompanyComponent implements OnInit {
     this.listCurrentCompany =
       JSON.parse(localStorage.getItem('DanhSachCongTy') || '[]') || [];
   }
-
-  prepareData() {}
 
   get diaChiGiaoHang() {
     return this.companyForm.controls['diaChiGiaoHang'] as FormArray;
@@ -62,6 +64,15 @@ export class InfomationCompanyComponent implements OnInit {
   submitForm() {
     if (this.companyForm.invalid) return;
     const data = { ...this.companyForm.value };
+    data.daiDienCongTy = {
+      hoTenViDaiDien: this.companyForm.value.hoTenViDaiDien,
+      chucVu: this.companyForm.value.chucVu,
+      gioiTinhViDaiDien: this.companyForm.value.gioiTinhViDaiDien,
+    };
+    delete data.chucVu;
+    delete data.hoTenViDaiDien;
+    delete data.gioiTinhViDaiDien;
+
     let tempCompany;
     if (this.isCreateNewCompany) {
       tempCompany = {
@@ -91,10 +102,15 @@ export class InfomationCompanyComponent implements OnInit {
 
   resetForm() {
     this.companyForm.reset();
+    this.companyForm.patchValue({
+      chucVu: '',
+      gioiTinhViDaiDien: '',
+    });
   }
 
   backToList() {
     this.isShowListCompany = true;
+    this.resetForm();
   }
 
   deleteCompany(id: number) {
@@ -134,6 +150,10 @@ export class InfomationCompanyComponent implements OnInit {
       diaChiCongTy: data.diaChiCongTy,
       diaChiGiaoHang: data.diaChiGiaoHang,
       tenThuongGoi: data.tenThuongGoi,
+      gioiTinhViDaiDien: data?.daiDienCongTy?.gioiTinhViDaiDien,
+      hoTenViDaiDien: data?.daiDienCongTy?.hoTenViDaiDien,
+      chucVu: data?.daiDienCongTy?.chucVu,
+      dienThoai: data?.dienThoai,
     });
     this.isCreateNewCompany = false;
     this.isShowListCompany = false;

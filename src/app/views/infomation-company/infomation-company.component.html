@@ -103,6 +103,49 @@
             </c-col>
           </c-row>
           <c-row class="mt-4">
+            <label cLabel="col" class="col-sm-2" for="daiDien">
+              Vị đại diện
+            </label>
+            <c-col [md]="2">
+              <select cSelect id="daiDien" formControlName="gioiTinhViDaiDien">
+                <option value="" disabled selected>Ông / Bà</option>
+                <option value="Ông">Ông</option>
+                <option value="Bà">Bà</option>
+              </select>
+            </c-col>
+            <c-col [md]="2">
+              <select cSelect id="chucVu" formControlName="chucVu">
+                <option value="" disabled selected>Chức vụ</option>
+                <option value="Giám đốc">Giám đốc</option>
+                <option value="Phó giám đốc">Phó giám đốc</option>
+                <option value="Tổng giám đốc">Tổng giám đốc</option>
+                <option value="Phó tổng giám đốc">Phó tổng giám đốc</option>
+              </select>
+            </c-col>
+            <c-col [md]="6">
+              <input
+                placeholder="Họ tên vị đại diện..."
+                formControlName="hoTenViDaiDien"
+                cFormControl
+                id="daiDien"
+                autocomplete="off"
+              />
+            </c-col>
+          </c-row>
+          <c-row class="mt-4">
+            <label cLabel="col" class="col-sm-2" for="sdt"> SĐT công ty </label>
+            <c-col [sm]="10">
+              <input
+                type="text"
+                formControlName="dienThoai"
+                cFormControl
+                id="sdt"
+                placeholder="Nhập SĐT..."
+                autocomplete="off"
+              />
+            </c-col>
+          </c-row>
+          <c-row class="mt-4">
             <label cLabel="col" class="col-sm-2" for="maKhachhang">
               Mã khách hàng
             </label>
