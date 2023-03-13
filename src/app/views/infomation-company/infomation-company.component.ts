@@ -25,6 +25,7 @@ export class InfomationCompanyComponent implements OnInit {
       tenCongTy: ['', Validators.required],
       maKhachHang: ['', Validators.required],
       diaChiCongTy: ['', Validators.required],
+      tenThuongGoi: ['', Validators.required],
       diaChiGiaoHang: this.fb.array([
         this.fb.group({
           address: ['', Validators.required],
@@ -132,6 +133,7 @@ export class InfomationCompanyComponent implements OnInit {
       maKhachHang: data.maKhachHang,
       diaChiCongTy: data.diaChiCongTy,
       diaChiGiaoHang: data.diaChiGiaoHang,
+      tenThuongGoi: data.tenThuongGoi,
     });
     this.isCreateNewCompany = false;
     this.isShowListCompany = false;

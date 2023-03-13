@@ -14,6 +14,7 @@
               <th scope="col">#</th>
               <th scope="col" class="text-center">Mã khách hàng</th>
               <th scope="col" class="text-center">Tên công ty</th>
+              <th scope="col" class="text-center">Tên thường gọi</th>
               <th scope="col" class="text-center">Quản lý</th>
             </tr>
           </thead>
@@ -23,6 +24,7 @@
                 <th scope="row">{{ id + 1 }}</th>
                 <td class="text-center">{{ item.maKhachHang }}</td>
                 <td class="text-center">{{ item.tenCongTy }}</td>
+                <td class="text-center">{{ item.tenThuongGoi }}</td>
                 <td class="text-center d-flex justify-content-center gap-2">
                   <div>
                     <button
@@ -81,6 +83,21 @@
                 cFormControl
                 id="tenCongTy"
                 placeholder="Nhập mới tên công ty..."
+                autocomplete="off"
+              />
+            </c-col>
+          </c-row>
+          <c-row class="mt-4">
+            <label cLabel="col" class="col-sm-2" for="tenThuongGoi">
+              Tên thường gọi
+            </label>
+            <c-col [sm]="10">
+              <input
+                type="text"
+                formControlName="tenThuongGoi"
+                cFormControl
+                id="tenThuongGoi"
+                placeholder="Nhập tên thường gọi..."
                 autocomplete="off"
               />
             </c-col>

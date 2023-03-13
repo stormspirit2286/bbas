@@ -3,6 +3,7 @@ export interface KhachHang {
   tenCongTy: string;
   maKhachHang: string;
   diaChiCongTy: string;
+  tenThuongGoi: string;
   diaChiGiaoHang: { address: string }[];
 }
 
@@ -26,6 +27,13 @@ export interface DonHang {
   ngayCanGiaoHang?: string;
   ghiChu?: string;
 }
+
+export const GHI_CHU = [
+  'Khách hàng mới, mã mới',
+  'Khách hàng cũ, mã cũ',
+  'khách hàng cũ, mã mới',
+  'Khách hàng cũ, mã cũ, sửa thiết kế',
+];
 
 export const LIST_DON_VI_TINH = ['Cái', 'Kg'];
 

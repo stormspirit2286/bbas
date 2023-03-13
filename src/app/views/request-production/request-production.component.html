@@ -47,19 +47,53 @@
         <c-row class="mt-4">
           <label cLabel="col" class="col-sm-2"> Địa chỉ giao hàng </label>
           <c-col [sm]="10">
-            <select
-              aria-label="Default select example"
-              cSelect
-              formControlName="diaChiGiaoHang"
-            >
-              <option value="" disabled selected>Chọn địa chỉ giao hàng</option>
-              <option
-                *ngFor="let item of listDiaChiGiaoHang"
-                [ngValue]="item?.address"
+            <div class="d-flex gap-2">
+              <select
+                aria-label="Default select example"
+                cSelect
+                formControlName="diaChiGiaoHang"
               >
-                {{ item?.address }}
-              </option>
-            </select>
+                <option value="" disabled selected>
+                  Chọn địa chỉ giao hàng
+                </option>
+                <option
+                  *ngFor="let item of listDiaChiGiaoHang"
+                  [ngValue]="item?.address"
+                >
+                  {{ item?.address }}
+                </option>
+              </select>
+              <button
+                [disabled]="!currentKhachHang?.maKhachHang"
+                cButton
+                color="info"
+                (click)="addMoreAddress()"
+              >
+                <svg
+                  [cIcon]="
+                    this.idAddMoreAddress ? icons.cilMinus : icons.cilPlus
+                  "
+                  size="lg"
+                  title="List Icon"
+                ></svg>
+              </button>
+            </div>
+
+            <c-row class="mt-2" *ngIf="idAddMoreAddress">
+              <c-col [md]="10">
+                <input
+                  cFormControl
+                  placeholder="Nhập địa chỉ giao hàng mới ..."
+                  type="text"
+                  #fondovalor
+                />
+              </c-col>
+              <c-col [md]="1" class="pr-5">
+                <button cButton color="success" (click)="onSaveAddress()">
+                  Save
+                </button>
+              </c-col>
+            </c-row>
           </c-col>
         </c-row>
 
@@ -94,12 +128,18 @@
                     formControlName="soLuong"
                     [disabled]="!item.value.isChecked"
                   />
-                  <input
-                    cFormControl
-                    placeholder="Ghi chú..."
-                    type="text"
+                  <select
+                    aria-label="Default select"
+                    cSelect
                     formControlName="ghiChu"
-                  />
+                  >
+                    <option value="" disabled selected>
+                      Chọn loại ghi chú
+                    </option>
+                    <option *ngFor="let item of GHI_CHU" [ngValue]="item">
+                      {{ item }}
+                    </option>
+                  </select>
                   <input
                     cFormControl
                     placeholder="Nhập ngày cần giao hàng"

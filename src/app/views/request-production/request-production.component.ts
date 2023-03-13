@@ -1,8 +1,15 @@
 import { ToastrService } from 'ngx-toastr';
-import { DonHang, imgBase64, KhachHang, SanPham } from './../models/khachKhang';
+import {
+  DonHang,
+  GHI_CHU,
+  imgBase64,
+  KhachHang,
+  SanPham,
+} from './../models/khachKhang';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import * as fs from 'file-saver';
+import { freeSet } from '@coreui/icons';
 
 import * as Excel from 'exceljs';
 import { debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
@@ -14,6 +21,9 @@ import { DatePipe } from '@angular/common';
   styleUrls: ['./request-production.component.scss'],
 })
 export class RequestProductionComponent implements OnInit {
+  @ViewChild('fondovalor') fondovalor!: ElementRef;
+  idAddMoreAddress = false;
+  icons = freeSet;
   createProductForm!: FormGroup;
   currentKhachHang?: KhachHang;
   listCurrentCompany: KhachHang[] = [];
@@ -22,12 +32,16 @@ export class RequestProductionComponent implements OnInit {
   listProductsSelected: SanPham[] = [];
   listDiaChiGiaoHang?: { address: string }[] = [];
   dataToProduct: DonHang[] = [];
+  GHI_CHU = GHI_CHU;
+  today: any;
 
   constructor(
     private fb: FormBuilder,
     private toastr: ToastrService,
     private datePipe: DatePipe
-  ) {}
+  ) {
+    this.today = this.datePipe.transform(new Date(), 'dd_MM_YYYY');
+  }
 
   ngOnInit() {
     this.createProductForm = this.fb.group({
@@ -67,6 +81,39 @@ export class RequestProductionComponent implements OnInit {
 
   get danhSachSanPham(): FormArray {
     return this.createProductForm.get('danhSachSanPham') as FormArray;
+  }
+
+  addMoreAddress() {
+    this.idAddMoreAddress = !this.idAddMoreAddress;
+  }
+
+  onSaveAddress() {
+    const valueInput = this.fondovalor.nativeElement.value;
+    let tempCompany: KhachHang;
+    if (this.currentKhachHang) {
+      const index = this.listCurrentCompany.findIndex(
+        (item) => item.id === this.currentKhachHang?.id
+      );
+      if (index === -1) return;
+      const listDC: { address: string }[] =
+        this.currentKhachHang.diaChiGiaoHang;
+      listDC.push({ address: valueInput });
+      tempCompany = {
+        ...this.currentKhachHang,
+        diaChiGiaoHang: listDC,
+      };
+      console.log(tempCompany);
+
+      this.listCurrentCompany.splice(index, 1, tempCompany);
+      localStorage.setItem(
+        'DanhSachCongTy',
+        JSON.stringify(this.listCurrentCompany)
+      );
+      this.toastr.success('Cập nhật thành công !!!');
+    } else {
+      this.toastr.warning('Cập nhật thất bại !!!');
+    }
+    this.idAddMoreAddress = !this.idAddMoreAddress;
   }
 
   addDanhSachDH(): void {
@@ -139,6 +186,12 @@ export class RequestProductionComponent implements OnInit {
   }
 
   exportToExcel(excelData: any) {
+    if (!this.currentKhachHang?.tenThuongGoi) {
+      this.toastr.warning(
+        'Công ty này chưa có tên thường gọi, vui lòng cập nhật lại'
+      );
+      return;
+    }
     const { title, headers, dsSanPham } = excelData;
     //Create a workbook with a worksheet
     let workbook = new Excel.Workbook();
@@ -375,6 +428,10 @@ export class RequestProductionComponent implements OnInit {
           horizontal: 'center',
           wrapText: true,
         };
+        cell.font = {
+          name: 'Times',
+          size: 11,
+        };
       });
     });
 
@@ -401,12 +458,76 @@ export class RequestProductionComponent implements OnInit {
     //Merge Cells
     worksheet.mergeCells(`A${footerRow.number}:H${footerRow.number}`);
 
+    //Blank Row
+    worksheet.addRow([]);
+
+    // const header = [
+    //   'Người lập phiếu\nRequested by',
+    //   'Trưởng phòng kinh doanh\nSale manager',
+    //   'Kế toán giá\nCost accounting',
+    //   'Ban giám đốc\nDirector',
+    // ];
+    // const headertable2 = worksheet.addRow(header);
+    // headertable2.height = 70;
+    // headertable2.border = {
+    //   top: { style: 'thin' },
+    //   left: { style: 'thin' },
+    //   bottom: { style: 'thin' },
+    //   right: { style: 'thin' },
+    // };
+    // headertable2.alignment = {
+    //   vertical: 'middle',
+    //   horizontal: 'center',
+    //   wrapText: true,
+    // };
+    // headertable2.font = {
+    //   name: 'Times',
+    //   size: 11,
+    // };
+    // const dataRow: any = [];
+    // worksheet.addRow(dataRow);
+
+    // Lấy số hàng cuối cùng của sheet
+    // const lastRow = worksheet.lastRow().number;
+    const lastRow = worksheet.rowCount;
+
+    // Tạo bảng
+    const tableHeader = [
+      'Người lập phiếu',
+      'Trưởng phòng kinh doanh',
+      'Kế toán giá',
+      'Ban giám đốc',
+    ];
+    worksheet.mergeCells(`A${lastRow + 1}:D${lastRow + 1}`);
+    const tableRow = worksheet.getRow(lastRow + 1);
+    tableRow.values = tableHeader;
+
+    // Định dạng bảng
+    tableRow.height = 25;
+    tableRow.alignment = { horizontal: 'center', vertical: 'middle' };
+    tableRow.font = { bold: true };
+
+    for (let col = 1; col <= 4; col++) {
+      worksheet.getColumn(col).width = 20;
+      worksheet.getCell(lastRow + 2, col).border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' },
+      };
+    }
+
+    worksheet.getRow(lastRow + 2).height = 30;
+    worksheet.views = [{ state: 'frozen', ySplit: lastRow + 2 }];
     //Generate & Save Excel File
     workbook.xlsx.writeBuffer().then((data) => {
       let blob = new Blob([data], {
         type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       });
-      fs.saveAs(blob, title + '.xlsx');
+      fs.saveAs(
+        blob,
+        `${title}_${this.currentKhachHang?.tenThuongGoi}_${this.today}.xlsx`
+      );
     });
   }
 
